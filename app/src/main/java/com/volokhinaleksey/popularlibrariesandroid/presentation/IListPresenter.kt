@@ -1,4 +1,4 @@
-package com.volokhinaleksey.popularlibrariesandroid.presenter
+package com.volokhinaleksey.popularlibrariesandroid.presentation
 
 import com.volokhinaleksey.popularlibrariesandroid.ui.IItemView
 import com.volokhinaleksey.popularlibrariesandroid.ui.UserItemView

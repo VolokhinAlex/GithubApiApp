@@ -1,7 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'kotlin-android-extensions'
+    id 'kotlin-parcelize'
     id 'kotlin-kapt'
 }
 
@@ -38,6 +38,8 @@ android {
 }
 
 dependencies {
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
+    implementation 'io.reactivex.rxjava3:rxjava:3.0.0'
     implementation 'com.github.moxy-community:moxy:2.2.2'
     kapt 'com.github.moxy-community:moxy-compiler:2.2.2'
     implementation "com.github.moxy-community:moxy-ktx:2.2.2"

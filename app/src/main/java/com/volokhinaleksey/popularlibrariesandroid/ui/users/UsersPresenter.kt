@@ -1,13 +1,14 @@
 package com.volokhinaleksey.popularlibrariesandroid.ui.users
 
-import android.os.Bundle
+import android.util.Log
 import com.github.terrakok.cicerone.Router
-import com.volokhinaleksey.popularlibrariesandroid.ui.user_details.UserFragment.Companion.ARG_USER_DATA
 import com.volokhinaleksey.popularlibrariesandroid.model.GithubUser
 import com.volokhinaleksey.popularlibrariesandroid.navigation.NavigationScreens
-import com.volokhinaleksey.popularlibrariesandroid.presenter.IUserListPresenter
+import com.volokhinaleksey.popularlibrariesandroid.presentation.IUserListPresenter
 import com.volokhinaleksey.popularlibrariesandroid.repository.GithubUsersRepo
 import com.volokhinaleksey.popularlibrariesandroid.ui.UserItemView
+import io.reactivex.rxjava3.core.Observer
+import io.reactivex.rxjava3.disposables.Disposable
 import moxy.MvpPresenter
 
 class UsersPresenter(
@@ -36,15 +37,31 @@ class UsersPresenter(
         loadData()
         usersListPresenter.onItemClickListener = {
             router.navigateTo(
-                NavigationScreens(usersRepository.getUsers().get(it.pos)).userDetailScreen()
+                NavigationScreens(usersListPresenter.users[it.pos]).userDetailScreen()
             )
         }
     }
 
     private fun loadData() {
-        val usersList = usersRepository.getUsers()
-        usersListPresenter.users.addAll(usersList)
-        viewState.updateList()
+        val usersObserver = object : Observer<GithubUser> {
+            override fun onSubscribe(d: Disposable) {
+                Log.e("TAG_DEBUG", "onSubscribe")
+            }
+
+            override fun onError(e: Throwable) {
+                Log.e("TAG_DEBUG", "onError")
+            }
+
+            override fun onComplete() {
+                Log.e("TAG_DEBUG", "onComplete")
+            }
+
+            override fun onNext(user: GithubUser) {
+                usersListPresenter.users.add(user)
+                viewState.updateList()
+            }
+        }
+        usersRepository.getUsers().subscribe(usersObserver)
     }
 
     fun backPressed(): Boolean {
