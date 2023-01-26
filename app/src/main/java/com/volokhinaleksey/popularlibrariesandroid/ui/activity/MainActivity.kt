@@ -1,4 +1,4 @@
-package com.volokhinaleksey.popularlibrariesandroid.ui
+package com.volokhinaleksey.popularlibrariesandroid.ui.activity
 
 import android.os.Bundle
 import com.github.terrakok.cicerone.androidx.AppNavigator

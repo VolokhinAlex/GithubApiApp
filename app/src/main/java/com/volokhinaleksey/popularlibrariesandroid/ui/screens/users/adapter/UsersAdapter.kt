@@ -1,22 +1,27 @@
-package com.volokhinaleksey.popularlibrariesandroid.ui.users
+package com.volokhinaleksey.popularlibrariesandroid.ui.screens.users.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.volokhinaleksey.popularlibrariesandroid.databinding.ItemUserBinding
-import com.volokhinaleksey.popularlibrariesandroid.presentation.IUserListPresenter
-import com.volokhinaleksey.popularlibrariesandroid.ui.UserItemView
+import com.volokhinaleksey.popularlibrariesandroid.ui.items.IUserListPresenter
+import com.volokhinaleksey.popularlibrariesandroid.ui.images.ImageLoader
 
-class UsersAdapter(val presenter: IUserListPresenter) :
+class UsersAdapter(val presenter: IUserListPresenter, val imageLoader: ImageLoader<ImageView>) :
     RecyclerView.Adapter<UsersAdapter.ViewHolder>() {
 
-    class ViewHolder(val item: ItemUserBinding) :
-        RecyclerView.ViewHolder(item.root), UserItemView {
+    inner class ViewHolder(private val userBinding: ItemUserBinding) :
+        RecyclerView.ViewHolder(userBinding.root), UserItemView {
 
         override var pos: Int = -1
 
         override fun setLogin(login: String) {
-            item.tvLogin.text = login
+            userBinding.userLogin.text = login
+        }
+
+        override fun setAvatar(url: String) {
+            imageLoader.loadImage(url, userBinding.userImage)
         }
     }
 

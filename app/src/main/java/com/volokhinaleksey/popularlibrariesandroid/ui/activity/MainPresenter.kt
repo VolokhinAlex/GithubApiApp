@@ -1,4 +1,4 @@
-package com.volokhinaleksey.popularlibrariesandroid.ui
+package com.volokhinaleksey.popularlibrariesandroid.ui.activity
 
 import com.github.terrakok.cicerone.Router
 import com.volokhinaleksey.popularlibrariesandroid.navigation.IScreens

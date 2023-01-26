@@ -1,4 +1,4 @@
-package com.volokhinaleksey.popularlibrariesandroid.ui.users
+package com.volokhinaleksey.popularlibrariesandroid.ui.screens.users
 
 import moxy.MvpView
 import moxy.viewstate.strategy.alias.AddToEndSingle
