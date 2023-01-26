@@ -24,13 +24,16 @@ import moxy.ktx.moxyPresenter
 class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
     private var _binding: FragmentUserBinding? = null
     private val binding get() = _binding!!
-    private var userData: GithubUser? = null
+    private val userData: GithubUser? by lazy {
+        arguments?.getParcelable(ARG_USER_DATA)
+    }
     private val userPresenter by moxyPresenter {
         UserPresenter(
             userRepo = GithubUsersRepoImpl(GithubApiHolder.githubApi),
             uiScheduler = AndroidSchedulers.mainThread(),
             router = App.appInstance.router,
-            screens = NavigationScreens()
+            screens = NavigationScreens(),
+            githubUser = userData
         )
     }
     private val imageLoader: ImageLoader<ImageView> = CoilImageLoader()
@@ -41,9 +44,6 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            userData = it.getParcelable(ARG_USER_DATA)
-        }
     }
 
     override fun onCreateView(
@@ -51,11 +51,6 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentUserBinding.inflate(inflater)
-        userData?.let { user ->
-            user.login?.let {
-                userPresenter.getUserInfoByLogin(it)
-            }
-        }
         return binding.root
     }
 

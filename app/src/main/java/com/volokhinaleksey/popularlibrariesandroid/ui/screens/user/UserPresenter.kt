@@ -1,6 +1,7 @@
 package com.volokhinaleksey.popularlibrariesandroid.ui.screens.user
 
 import com.github.terrakok.cicerone.Router
+import com.volokhinaleksey.popularlibrariesandroid.model.GithubUser
 import com.volokhinaleksey.popularlibrariesandroid.model.GithubUserRepo
 import com.volokhinaleksey.popularlibrariesandroid.navigation.IScreens
 import com.volokhinaleksey.popularlibrariesandroid.repository.GithubUsersRepo
@@ -17,7 +18,8 @@ class UserPresenter(
     private val userRepo: GithubUsersRepo,
     private val uiScheduler: Scheduler,
     private val router: Router,
-    private val screens: IScreens
+    private val screens: IScreens,
+    private val githubUser: GithubUser?
 ) : MvpPresenter<UserView>() {
 
     private val compositeDisposable = CompositeDisposable()
@@ -27,7 +29,7 @@ class UserPresenter(
         override var onItemClickListener: ((RepoItemView) -> Unit)? = null
 
         override fun bindView(view: RepoItemView) {
-            view.setRepoName(repos[view.pos].name.orEmpty())
+            repos[view.pos].name?.let { view.setRepoName(it) }
         }
 
         override fun getItemsCount(): Int = repos.size
@@ -38,12 +40,13 @@ class UserPresenter(
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.init()
+        githubUser?.login?.let { getUserInfoByLogin(it) }
         userReposListPresenter.onItemClickListener = {
             router.navigateTo(screens.repoDetailsScreen(userReposListPresenter.repos[it.pos]))
         }
     }
 
-    fun getUserInfoByLogin(userName: String) {
+    private fun getUserInfoByLogin(userName: String) {
         compositeDisposable.add(
             userRepo.getUserByLogin(userName).observeOn(uiScheduler).subscribe({ data ->
                 viewState.setUserData(data)
