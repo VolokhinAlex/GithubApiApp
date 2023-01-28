@@ -1,6 +1,6 @@
 package com.volokhinaleksey.popularlibrariesandroid.ui.screens.user
 
-import com.volokhinaleksey.popularlibrariesandroid.model.GithubUser
+import com.volokhinaleksey.popularlibrariesandroid.model.GithubUserDTO
 import moxy.MvpView
 import moxy.viewstate.strategy.alias.AddToEndSingle
 
@@ -8,5 +8,5 @@ import moxy.viewstate.strategy.alias.AddToEndSingle
 interface UserView : MvpView {
     fun init()
     fun updateList()
-    fun setUserData(githubUser: GithubUser)
+    fun setUserData(githubUser: GithubUserDTO)
 }

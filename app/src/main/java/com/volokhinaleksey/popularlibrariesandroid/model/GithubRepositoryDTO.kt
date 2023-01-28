@@ -18,7 +18,7 @@ import kotlinx.parcelize.Parcelize
  */
 
 @Parcelize
-data class GithubUserRepo(
+data class GithubRepositoryDTO(
     @Expose
     val id: Long?,
     @Expose
