@@ -35,13 +35,11 @@ class GithubRepositoriesRepositoryImpl(
                 user.reposUrl?.let { url ->
                     remoteApiSource.getUserRepos(url)
                         .flatMap { repositories ->
-                            Single.fromCallable {
-                                repositoriesCache.cacheUserRepositoriesToDatabase(
-                                    localDatabase,
-                                    repositories,
-                                    user
-                                )
-                            }
+                            repositoriesCache.cacheUserRepositoriesToDatabase(
+                                localDatabase,
+                                repositories,
+                                user
+                            )
                         }
                 }
                     ?: Single.error<List<GithubRepositoryDTO>>(RuntimeException("User has no repos url"))

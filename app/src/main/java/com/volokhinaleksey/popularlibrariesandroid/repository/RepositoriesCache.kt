@@ -4,13 +4,14 @@ import com.volokhinaleksey.popularlibrariesandroid.model.GithubRepositoryDTO
 import com.volokhinaleksey.popularlibrariesandroid.model.GithubUserDTO
 import com.volokhinaleksey.popularlibrariesandroid.room.GithubRoomDatabase
 import com.volokhinaleksey.popularlibrariesandroid.utils.convertGithubRepositoryToRoomGithubUserRepo
+import io.reactivex.rxjava3.core.Single
 
 interface RepositoriesCache {
     fun cacheUserRepositoriesToDatabase(
         localDatabase: GithubRoomDatabase,
         repositories: List<GithubRepositoryDTO>,
         userDTO: GithubUserDTO
-    ): List<GithubRepositoryDTO>
+    ): Single<List<GithubRepositoryDTO>>
 }
 
 class RoomGithubRepositoriesCacheImpl : RepositoriesCache {
@@ -19,7 +20,7 @@ class RoomGithubRepositoriesCacheImpl : RepositoriesCache {
         localDatabase: GithubRoomDatabase,
         repositories: List<GithubRepositoryDTO>,
         userDTO: GithubUserDTO
-    ): List<GithubRepositoryDTO> {
+    ): Single<List<GithubRepositoryDTO>> = Single.fromCallable {
         userDTO.login?.let {
             val roomUser = localDatabase.userDao.findByLogin(it)
             val roomRepos = repositories.map { user ->
@@ -27,7 +28,7 @@ class RoomGithubRepositoriesCacheImpl : RepositoriesCache {
             }
             localDatabase.repositoryDao.insert(roomRepos)
         }
-        return repositories
+        repositories
     }
 
 }

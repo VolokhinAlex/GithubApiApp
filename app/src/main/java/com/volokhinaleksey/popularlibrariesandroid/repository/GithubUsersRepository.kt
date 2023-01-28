@@ -45,9 +45,7 @@ class GithubUsersRepositoryImpl(
         networkStatus.isNetworkAvailableSingle().flatMap { isAvailable ->
             if (isAvailable) {
                 remoteApiSource.getUsers().flatMap { users ->
-                    Single.fromCallable {
-                        roomGithubUsersCache.cacheUsersToDatabase(users, localDatabase)
-                    }
+                    roomGithubUsersCache.cacheUsersToDatabase(users, localDatabase)
                 }
             } else {
                 Single.fromCallable {
@@ -60,16 +58,14 @@ class GithubUsersRepositoryImpl(
 
     /**
      * Method for getting user information
-     * @param user - User login
+     * @param user - User data
      */
 
     override fun getUserByLogin(user: GithubUserDTO): Single<GithubUserDTO> =
         networkStatus.isNetworkAvailableSingle().flatMap { isAvailable ->
             if (isAvailable) {
                 remoteApiSource.getUser(user.url.orEmpty()).flatMap { githubUser ->
-                    Single.fromCallable {
-                        roomGithubUsersCache.cacheUserToDatabase(githubUser, localDatabase)
-                    }
+                    roomGithubUsersCache.cacheUserToDatabase(githubUser, localDatabase)
                 }
             } else {
                 Single.fromCallable {
