@@ -35,10 +35,13 @@ class UserPresenter(
     @Inject
     lateinit var screens: IScreens
 
+    @Inject
+    lateinit var userReposListPresenter: IUserReposListPresenter
+
     private val compositeDisposable = CompositeDisposable()
 
     class UserReposListPresenter : IUserReposListPresenter {
-        val repos = mutableListOf<GithubRepositoryDTO>()
+        override val repos = mutableListOf<GithubRepositoryDTO>()
         override var onItemClickListener: ((RepoItemView) -> Unit)? = null
 
         override fun bindView(view: RepoItemView) {
@@ -47,8 +50,6 @@ class UserPresenter(
 
         override fun getItemsCount(): Int = repos.size
     }
-
-    val userReposListPresenter = UserReposListPresenter()
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()

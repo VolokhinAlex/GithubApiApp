@@ -9,6 +9,8 @@ import com.volokhinaleksey.popularlibrariesandroid.utils.AndroidNetworkStatus
 import com.volokhinaleksey.popularlibrariesandroid.utils.NetworkStatus
 import dagger.Module
 import dagger.Provides
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -24,6 +26,17 @@ class ApiModule {
 
     @Singleton
     @Provides
+    fun client(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient =
+        OkHttpClient.Builder()
+            .addInterceptor(httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY))
+            .build()
+
+    @Provides
+    @Singleton
+    fun loggingInterceptor(): HttpLoggingInterceptor = HttpLoggingInterceptor()
+
+    @Singleton
+    @Provides
     fun gson(): Gson = GsonBuilder()
         .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
         .excludeFieldsWithoutExposeAnnotation()
@@ -31,11 +44,16 @@ class ApiModule {
 
     @Singleton
     @Provides
-    fun api(@Named("basedUrl") baseUrl: String, gson: Gson): GithubApiService =
+    fun api(
+        @Named("basedUrl") baseUrl: String,
+        gson: Gson,
+        client: OkHttpClient
+    ): GithubApiService =
         Retrofit.Builder()
             .baseUrl(baseUrl)
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create(gson))
+            .client(client)
             .build()
             .create(GithubApiService::class.java)
 

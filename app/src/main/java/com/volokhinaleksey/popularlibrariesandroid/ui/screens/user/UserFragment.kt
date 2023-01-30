@@ -36,7 +36,7 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
     }
 
     private val reposAdapter: ReposAdapter by lazy {
-        ReposAdapter(presenter = userPresenter.userReposListPresenter)
+        App.appInstance.appComponent.injectReposAdapter()
     }
 
     override fun onCreateView(
