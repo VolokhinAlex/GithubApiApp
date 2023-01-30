@@ -9,15 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.volokhinaleksey.popularlibrariesandroid.app.App
 import com.volokhinaleksey.popularlibrariesandroid.databinding.FragmentUsersBinding
 import com.volokhinaleksey.popularlibrariesandroid.navigation.BackButtonListener
-import com.volokhinaleksey.popularlibrariesandroid.navigation.NavigationScreens
-import com.volokhinaleksey.popularlibrariesandroid.repository.GithubApiHolder
-import com.volokhinaleksey.popularlibrariesandroid.repository.GithubUsersRepositoryImpl
-import com.volokhinaleksey.popularlibrariesandroid.repository.RoomGithubUsersCacheImpl
-import com.volokhinaleksey.popularlibrariesandroid.room.GithubRoomDatabase
-import com.volokhinaleksey.popularlibrariesandroid.ui.images.CachedImageLoader
-import com.volokhinaleksey.popularlibrariesandroid.ui.screens.users.adapter.UsersAdapter
-import com.volokhinaleksey.popularlibrariesandroid.utils.AndroidNetworkStatus
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 
@@ -27,23 +18,10 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
     private val binding get() = _binding!!
 
     private val presenter by moxyPresenter {
-        UsersPresenter(
-            usersRepository = GithubUsersRepositoryImpl(
-                remoteApiSource = GithubApiHolder.githubApi,
-                networkStatus = AndroidNetworkStatus(requireContext()),
-                localDatabase = GithubRoomDatabase.getInstance(),
-                roomGithubUsersCache = RoomGithubUsersCacheImpl()
-            ),
-            router = App.appInstance.router,
-            uiScheduler = AndroidSchedulers.mainThread(),
-            screens = NavigationScreens()
-        )
+        App.appInstance.appComponent.injectUsersPresenter()
     }
     private val usersListAdapter by lazy {
-        UsersAdapter(
-            presenter = presenter.usersListPresenter,
-            imageLoader = CachedImageLoader() // CoilImageLoader
-        )
+        App.appInstance.appComponent.injectUsersAdapter()
     }
 
     override fun onCreateView(
@@ -70,6 +48,4 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
     }
 
     override fun backPressed(): Boolean = presenter.backPressed()
-
-
 }

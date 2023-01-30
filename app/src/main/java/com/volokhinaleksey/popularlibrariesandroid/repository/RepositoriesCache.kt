@@ -5,19 +5,19 @@ import com.volokhinaleksey.popularlibrariesandroid.model.GithubUserDTO
 import com.volokhinaleksey.popularlibrariesandroid.room.GithubRoomDatabase
 import com.volokhinaleksey.popularlibrariesandroid.utils.convertGithubRepositoryToRoomGithubUserRepo
 import io.reactivex.rxjava3.core.Single
+import javax.inject.Inject
 
 interface RepositoriesCache {
     fun cacheUserRepositoriesToDatabase(
-        localDatabase: GithubRoomDatabase,
         repositories: List<GithubRepositoryDTO>,
         userDTO: GithubUserDTO
     ): Single<List<GithubRepositoryDTO>>
 }
 
-class RoomGithubRepositoriesCacheImpl : RepositoriesCache {
+class RoomGithubRepositoriesCacheImpl
+@Inject constructor(private val localDatabase: GithubRoomDatabase) : RepositoriesCache {
 
     override fun cacheUserRepositoriesToDatabase(
-        localDatabase: GithubRoomDatabase,
         repositories: List<GithubRepositoryDTO>,
         userDTO: GithubUserDTO
     ): Single<List<GithubRepositoryDTO>> = Single.fromCallable {

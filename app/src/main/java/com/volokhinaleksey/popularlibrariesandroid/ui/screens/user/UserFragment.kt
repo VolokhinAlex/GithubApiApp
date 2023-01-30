@@ -11,45 +11,29 @@ import com.volokhinaleksey.popularlibrariesandroid.app.App
 import com.volokhinaleksey.popularlibrariesandroid.databinding.FragmentUserBinding
 import com.volokhinaleksey.popularlibrariesandroid.model.GithubUserDTO
 import com.volokhinaleksey.popularlibrariesandroid.navigation.BackButtonListener
-import com.volokhinaleksey.popularlibrariesandroid.navigation.NavigationScreens
 import com.volokhinaleksey.popularlibrariesandroid.repository.*
-import com.volokhinaleksey.popularlibrariesandroid.room.GithubRoomDatabase
 import com.volokhinaleksey.popularlibrariesandroid.ui.images.ImageLoader
-import com.volokhinaleksey.popularlibrariesandroid.ui.images.CachedImageLoader
 import com.volokhinaleksey.popularlibrariesandroid.ui.screens.user.adapter.ReposAdapter
-import com.volokhinaleksey.popularlibrariesandroid.utils.AndroidNetworkStatus
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
+import javax.inject.Inject
 
 class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
     private var _binding: FragmentUserBinding? = null
     private val binding get() = _binding!!
+
     private val userData: GithubUserDTO? by lazy {
         arguments?.getParcelable(ARG_USER_DATA)
     }
-    private val userPresenter by moxyPresenter {
-        UserPresenter(
-            userRepo = GithubUsersRepositoryImpl(
-                remoteApiSource = GithubApiHolder.githubApi,
-                networkStatus = AndroidNetworkStatus(requireContext()),
-                localDatabase = GithubRoomDatabase.getInstance(),
-                roomGithubUsersCache = RoomGithubUsersCacheImpl()
-            ),
-            repositoryRepo = GithubRepositoriesRepositoryImpl(
-                remoteApiSource = GithubApiHolder.githubApi,
-                networkStatus = AndroidNetworkStatus(requireContext()),
-                localDatabase = GithubRoomDatabase.getInstance(),
-                repositoriesCache = RoomGithubRepositoriesCacheImpl()
-            ),
-            uiScheduler = AndroidSchedulers.mainThread(),
-            router = App.appInstance.router,
-            screens = NavigationScreens(),
-            githubUser = userData
-        )
-    }
-    private val imageLoader: ImageLoader<ImageView> = CachedImageLoader()
 
+    @Inject
+    lateinit var imageLoader: ImageLoader<ImageView>
+
+    private val userPresenter by moxyPresenter {
+        UserPresenter(githubUser = userData).apply {
+            App.appInstance.appComponent.inject(this)
+        }
+    }
 
     private val reposAdapter: ReposAdapter by lazy {
         ReposAdapter(presenter = userPresenter.userReposListPresenter)
@@ -59,6 +43,7 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        App.appInstance.appComponent.inject(this)
         _binding = FragmentUserBinding.inflate(inflater)
         return binding.root
     }
@@ -101,7 +86,7 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
         binding.following.text = following.toString()
         binding.publicRepos.text = publicRepos.toString()
         binding.publicGists.text = publicGists.toString()
-        githubUser.imageUrlFromStorage?.let { imageLoader.loadImage(it, binding.userImage) }
+        githubUser.avatarUrl?.let { imageLoader.loadImage(it, binding.userImage) }
     }
 
     override fun backPressed(): Boolean = userPresenter.backPressed()

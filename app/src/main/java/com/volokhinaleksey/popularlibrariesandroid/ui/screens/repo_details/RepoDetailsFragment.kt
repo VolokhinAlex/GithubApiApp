@@ -21,7 +21,7 @@ class RepoDetailsFragment : MvpAppCompatFragment(), RepoDetailsView, BackButtonL
     private val binding get() = _binding!!
 
     private val repoDetailsRepository by moxyPresenter {
-        RepoDetailsPresenter(router = App.appInstance.router)
+        App.appInstance.appComponent.injectRepoDetailsPresenter()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -7,6 +7,7 @@ import com.volokhinaleksey.popularlibrariesandroid.utils.NetworkStatus
 import com.volokhinaleksey.popularlibrariesandroid.utils.convertRoomGithubUserRepoToGithubRepository
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
+import javax.inject.Inject
 
 interface GithubRepositoriesRepository {
     /**
@@ -17,7 +18,7 @@ interface GithubRepositoriesRepository {
     fun getUserRepos(user: GithubUserDTO): Single<List<GithubRepositoryDTO>>
 }
 
-class GithubRepositoriesRepositoryImpl(
+class GithubRepositoriesRepositoryImpl @Inject constructor(
     private val remoteApiSource: GithubApiService,
     private val networkStatus: NetworkStatus,
     private val localDatabase: GithubRoomDatabase,
@@ -36,14 +37,11 @@ class GithubRepositoriesRepositoryImpl(
                     remoteApiSource.getUserRepos(url)
                         .flatMap { repositories ->
                             repositoriesCache.cacheUserRepositoriesToDatabase(
-                                localDatabase,
                                 repositories,
                                 user
                             )
                         }
-                }
-                    ?: Single.error<List<GithubRepositoryDTO>>(RuntimeException("User has no repos url"))
-                        .subscribeOn(Schedulers.io())
+                } ?: error("User has no repos url")
             } else {
                 Single.fromCallable {
                     val roomUser = user.login?.let { localDatabase.userDao.findByLogin(it) }

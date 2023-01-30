@@ -12,17 +12,28 @@ import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import moxy.MvpPresenter
 import timber.log.Timber
+import javax.inject.Inject
 
 private const val SERVER_ERROR = "Server Error"
 
 class UserPresenter(
-    private val userRepo: GithubUsersRepository,
-    private val repositoryRepo: GithubRepositoriesRepository,
-    private val uiScheduler: Scheduler,
-    private val router: Router,
-    private val screens: IScreens,
     private val githubUser: GithubUserDTO?
 ) : MvpPresenter<UserView>() {
+
+    @Inject
+    lateinit var uiScheduler: Scheduler
+
+    @Inject
+    lateinit var userRepo: GithubUsersRepository
+
+    @Inject
+    lateinit var repositoryRepo: GithubRepositoriesRepository
+
+    @Inject
+    lateinit var router: Router
+
+    @Inject
+    lateinit var screens: IScreens
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -42,7 +53,10 @@ class UserPresenter(
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.init()
-        githubUser?.let { getUserInfoByLogin(it) }
+        githubUser?.let {
+            getUserInfoByLogin(it)
+            loadUserRepositories(it)
+        }
         userReposListPresenter.onItemClickListener = {
             router.navigateTo(screens.repoDetailsScreen(userReposListPresenter.repos[it.pos]))
         }
@@ -52,14 +66,13 @@ class UserPresenter(
         compositeDisposable.add(
             userRepo.getUserByLogin(user).observeOn(uiScheduler).subscribe({ data ->
                 viewState.setUserData(data)
-                data.login?.let { loadData(data) }
             }, {
                 Timber.e("$SERVER_ERROR: $it")
             })
         )
     }
 
-    private fun loadData(user: GithubUserDTO) {
+    private fun loadUserRepositories(user: GithubUserDTO) {
         compositeDisposable.add(
             repositoryRepo.getUserRepos(user).observeOn(uiScheduler).subscribe({ data ->
                 userReposListPresenter.repos.clear()
