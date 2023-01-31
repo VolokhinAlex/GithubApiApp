@@ -7,29 +7,28 @@ import com.volokhinaleksey.popularlibrariesandroid.repository.RoomGithubReposito
 import com.volokhinaleksey.popularlibrariesandroid.repository.RoomGithubUsersCacheImpl
 import com.volokhinaleksey.popularlibrariesandroid.repository.UsersCache
 import com.volokhinaleksey.popularlibrariesandroid.room.GithubRoomDatabase
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
 @Module
-class CacheModule {
+interface CacheModule {
 
     @Singleton
-    @Provides
-    fun database(app: App): GithubRoomDatabase =
-        Room.databaseBuilder(app, GithubRoomDatabase::class.java, DB_NAME).build()
+    @Binds
+    fun usersCache(impl: RoomGithubUsersCacheImpl): UsersCache
 
     @Singleton
-    @Provides
-    fun usersCache(database: GithubRoomDatabase): UsersCache =
-        RoomGithubUsersCacheImpl(localDatabase = database)
-
-    @Singleton
-    @Provides
-    fun repositoriesCache(database: GithubRoomDatabase): RepositoriesCache =
-        RoomGithubRepositoriesCacheImpl(database)
+    @Binds
+    fun repositoriesCache(impl: RoomGithubRepositoriesCacheImpl): RepositoriesCache
 
     companion object {
         private const val DB_NAME = "github.db"
+
+        @Singleton
+        @Provides
+        fun database(app: App): GithubRoomDatabase =
+            Room.databaseBuilder(app, GithubRoomDatabase::class.java, DB_NAME).build()
     }
 }
