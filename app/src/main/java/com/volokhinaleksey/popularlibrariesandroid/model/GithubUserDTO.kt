@@ -49,6 +49,5 @@ data class GithubUserDTO(
     @Expose
     val url: String?,
     @Expose
-    val reposUrl: String?,
-    var imageUrlFromStorage: String?
+    val reposUrl: String?
 ) : Parcelable

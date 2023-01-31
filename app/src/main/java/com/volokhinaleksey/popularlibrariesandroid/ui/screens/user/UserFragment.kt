@@ -65,15 +65,27 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
             }
     }
 
+    /**
+     * Initial initialization list in the Recycler view
+     */
+
     override fun init() {
         binding.reposListContainer.adapter = reposAdapter
         binding.reposListContainer.layoutManager = LinearLayoutManager(requireContext())
     }
 
+    /**
+     * Updating the list in the Recycler view
+     */
+
     @SuppressLint("NotifyDataSetChanged")
     override fun updateList() {
         reposAdapter.notifyDataSetChanged()
     }
+
+    /**
+     * Installing User data into UI Items
+     */
 
     override fun setUserData(githubUser: GithubUserDTO) {
         binding.userLogin.text = githubUser.login

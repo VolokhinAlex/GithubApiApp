@@ -14,8 +14,24 @@ interface RepositoriesCache {
     ): Single<List<GithubRepositoryDTO>>
 }
 
+/**
+ * Implementation of an interface for caching data to a local sqlite database under Room management
+ *
+ * @param localDatabase - A local database instance that is automatically injected using dagger
+ */
+
 class RoomGithubRepositoriesCacheImpl
 @Inject constructor(private val localDatabase: GithubRoomDatabase) : RepositoriesCache {
+
+    /**
+     * The method gets the user login from the GithubUserDTO data class performs a search in the
+     * local database, if there is such a user, then the list of repositories is written to the database.
+     *
+     * @param repositories - A class with user's repositories
+     * @param userDTO - A class with user data
+     *
+     * @return - The method returns a single RxJava object, in which the list of user's repositories is wrapped.
+     */
 
     override fun cacheUserRepositoriesToDatabase(
         repositories: List<GithubRepositoryDTO>,
@@ -26,7 +42,7 @@ class RoomGithubRepositoriesCacheImpl
             val roomRepos = repositories.map { user ->
                 convertGithubRepositoryToRoomGithubUserRepo(user, roomUser?.id)
             }
-            localDatabase.repositoryDao.insert(roomRepos)
+            localDatabase.repositoryDao.upsert(roomRepos)
         }
         repositories
     }

@@ -24,9 +24,22 @@ class UsersPresenter @Inject constructor(
 
     private val compositeDisposable = CompositeDisposable()
 
+    /**
+     * A class for interacting with a list of elementsG
+     */
+
     class UsersListPresenter : IUserListPresenter {
         override val users = mutableListOf<GithubUserDTO>()
+
+        /**
+         * Events of clicking on a list item
+         */
+
         override var onItemClickListener: ((UserItemView) -> Unit)? = null
+
+        /**
+         * Filling the list with data
+         */
 
         override fun bindView(view: UserItemView) {
             val user = users[view.pos]
@@ -34,8 +47,17 @@ class UsersPresenter @Inject constructor(
             user.avatarUrl?.let { view.setAvatar(it) }
         }
 
+        /**
+         * Getting the list size
+         */
+
         override fun getItemsCount(): Int = users.size
     }
+
+    /**
+     * Callback after the first presenter init and view binding.
+     * If this presenter instance will have to attach more views in the future, this method will not be called.
+     */
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -45,6 +67,10 @@ class UsersPresenter @Inject constructor(
             router.navigateTo(screens.userDetailScreen(usersListPresenter.users[it.pos]))
         }
     }
+
+    /**
+     * Method for getting data from the repository
+     */
 
     private fun loadData() {
         compositeDisposable.add(

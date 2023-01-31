@@ -3,16 +3,16 @@ package com.volokhinaleksey.popularlibrariesandroid.room
 import androidx.room.*
 import com.volokhinaleksey.popularlibrariesandroid.model.RoomGithubUser
 
+/**
+ * Interface for interacting with a local database table
+ */
 @Dao
 interface UserDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(user: RoomGithubUser)
+    @Upsert
+    fun upsert(user: RoomGithubUser)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(user: List<RoomGithubUser>)
-
-    @Update
-    fun update(user: RoomGithubUser)
+    @Upsert
+    fun upsert(user: List<RoomGithubUser>)
 
     @Delete
     fun delete(user: RoomGithubUser)

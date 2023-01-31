@@ -29,6 +29,7 @@ interface CacheModule {
         @Singleton
         @Provides
         fun database(app: App): GithubRoomDatabase =
-            Room.databaseBuilder(app, GithubRoomDatabase::class.java, DB_NAME).build()
+            Room.databaseBuilder(app, GithubRoomDatabase::class.java, DB_NAME)
+                .fallbackToDestructiveMigration().build()
     }
 }

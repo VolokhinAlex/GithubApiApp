@@ -42,14 +42,32 @@ class UserPresenter(
 
     class UserReposListPresenter : IUserReposListPresenter {
         override val repos = mutableListOf<GithubRepositoryDTO>()
+
+        /**
+         * Events of clicking on a list item
+         */
+
         override var onItemClickListener: ((RepoItemView) -> Unit)? = null
+
+        /**
+         * Filling the list with data
+         */
 
         override fun bindView(view: RepoItemView) {
             repos[view.pos].name?.let { view.setRepoName(it) }
         }
 
+        /**
+         * Getting the list size
+         */
+
         override fun getItemsCount(): Int = repos.size
     }
+
+    /**
+     * Callback after the first presenter init and view binding.
+     * If this presenter instance will have to attach more views in the future, this method will not be called.
+     */
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -63,6 +81,11 @@ class UserPresenter(
         }
     }
 
+    /**
+     * Method for getting user data by login from the repository
+     * @param user - A user data.
+     */
+
     private fun getUserInfoByLogin(user: GithubUserDTO) {
         compositeDisposable.add(
             userRepo.getUserByLogin(user).observeOn(uiScheduler).subscribe({ data ->
@@ -72,6 +95,11 @@ class UserPresenter(
             })
         )
     }
+
+    /**
+     * Method for getting a list of user's repositories from the repository
+     * @param user - A user data.
+     */
 
     private fun loadUserRepositories(user: GithubUserDTO) {
         compositeDisposable.add(

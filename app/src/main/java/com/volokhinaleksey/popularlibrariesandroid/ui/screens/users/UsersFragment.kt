@@ -17,7 +17,7 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
     private var _binding: FragmentUsersBinding? = null
     private val binding get() = _binding!!
 
-    private val presenter by moxyPresenter {
+    private val usersPresenter by moxyPresenter {
         App.appInstance.appComponent.injectUsersPresenter()
     }
     private val usersListAdapter by lazy {
@@ -32,10 +32,18 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
         return binding.root
     }
 
+    /**
+     * Initial initialization list in the Recycler view
+     */
+
     override fun init() {
         binding.usersListContainer.adapter = usersListAdapter
         binding.usersListContainer.layoutManager = LinearLayoutManager(requireContext())
     }
+
+    /**
+     * Updating the list in the Recycler view
+     */
 
     @SuppressLint("NotifyDataSetChanged")
     override fun updateList() {
@@ -47,5 +55,10 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
         _binding = null
     }
 
-    override fun backPressed(): Boolean = presenter.backPressed()
+    companion object {
+        @JvmStatic
+        fun newInstance() = UsersFragment()
+    }
+
+    override fun backPressed(): Boolean = usersPresenter.backPressed()
 }
