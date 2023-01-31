@@ -10,6 +10,7 @@ import com.volokhinaleksey.popularlibrariesandroid.app.App
 import com.volokhinaleksey.popularlibrariesandroid.databinding.FragmentRepoDetailsBinding
 import com.volokhinaleksey.popularlibrariesandroid.model.GithubRepositoryDTO
 import com.volokhinaleksey.popularlibrariesandroid.navigation.BackButtonListener
+import com.volokhinaleksey.popularlibrariesandroid.utils.parcelable
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 
@@ -27,7 +28,7 @@ class RepoDetailsFragment : MvpAppCompatFragment(), RepoDetailsView, BackButtonL
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            detailsRepoData = it.getParcelable(ARG_DETAILS_REPO)
+            detailsRepoData = it.parcelable(ARG_DETAILS_REPO)
         }
     }
 

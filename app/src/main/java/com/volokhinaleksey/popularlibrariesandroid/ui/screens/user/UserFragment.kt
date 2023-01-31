@@ -14,6 +14,7 @@ import com.volokhinaleksey.popularlibrariesandroid.navigation.BackButtonListener
 import com.volokhinaleksey.popularlibrariesandroid.repository.*
 import com.volokhinaleksey.popularlibrariesandroid.ui.images.ImageLoader
 import com.volokhinaleksey.popularlibrariesandroid.ui.screens.user.adapter.ReposAdapter
+import com.volokhinaleksey.popularlibrariesandroid.utils.parcelable
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
@@ -23,7 +24,7 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
     private val binding get() = _binding!!
 
     private val userData: GithubUserDTO? by lazy {
-        arguments?.getParcelable(ARG_USER_DATA)
+        arguments?.parcelable(ARG_USER_DATA)
     }
 
     @Inject
