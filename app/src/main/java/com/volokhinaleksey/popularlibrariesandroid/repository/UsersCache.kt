@@ -9,9 +9,24 @@ import javax.inject.Inject
 
 
 interface UsersCache {
+
+    /**
+     * The method writes a list of users to the database
+     *
+     * @param users - A class with the list of user data
+     *
+     * @return - The method returns a single RxJava object, in which the list of users is wrapped.
+     */
+
     fun cacheUsersToDatabase(
         users: List<GithubUserDTO>,
     ): Single<List<GithubUserDTO>>
+
+    /**
+     * A method for retrieving data from a local database if there is no internet connection on the user's device.
+     *
+     * @return - The method returns a single RxJava object, in which the list of users is wrapped.
+     */
 
     fun getUsersDataFromDatabase(): Single<List<GithubUserDTO>>
 }
@@ -43,6 +58,12 @@ class RoomGithubUsersCacheImpl @Inject constructor(
         localDatabase.userDao.upsert(roomUsers)
         users
     }
+
+    /**
+     * A method for retrieving data from a local database if there is no internet connection on the user's device.
+     *
+     * @return - The method returns a single RxJava object, in which the list of users is wrapped.
+     */
 
     override fun getUsersDataFromDatabase(): Single<List<GithubUserDTO>> =
         Single.fromCallable {

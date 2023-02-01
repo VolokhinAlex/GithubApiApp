@@ -37,9 +37,18 @@ class UserPresenter(
     @Inject
     lateinit var userScopeContainer: UserScopeContainer
 
+    /**
+     * Variable for collecting disposable objects into one
+     */
+
     private val compositeDisposable = CompositeDisposable()
 
     class UserReposListPresenter : IUserReposListPresenter {
+
+        /**
+         * List with data
+         */
+
         override val repos = mutableListOf<GithubRepositoryDTO>()
 
         /**

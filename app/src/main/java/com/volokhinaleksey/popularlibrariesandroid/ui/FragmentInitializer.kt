@@ -7,6 +7,12 @@ import androidx.fragment.app.FragmentFactory
 
 const val DATA_KEY = "DATA KEY"
 
+/**
+ * Factory interface for creating Fragments with data transmitted using bundle
+ *
+ * @sample «companion object : FragmentInitializer<GithubUserDTO>»
+ */
+
 interface FragmentInitializer<T : Parcelable> {
 
     fun newInstance(arg: T): Fragment {

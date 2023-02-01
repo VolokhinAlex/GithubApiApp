@@ -14,6 +14,14 @@ class RepoDetailsPresenter(
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
+        repoDataLoad()
+    }
+
+    /**
+     * Method for loading data
+     */
+
+    private fun repoDataLoad() {
         repositoryData?.apply {
             name?.let { viewState.setRepoName(it) }
             viewState.setForkCount(forks.toString())

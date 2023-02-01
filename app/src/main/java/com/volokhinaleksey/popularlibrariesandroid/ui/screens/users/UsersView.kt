@@ -9,6 +9,16 @@ import moxy.viewstate.strategy.alias.AddToEndSingle
 
 @AddToEndSingle
 interface UsersView : MvpView {
+
+    /**
+     * Method for initial initialization of UI elements
+     */
+
     fun init()
+
+    /**
+     * Method for updating the list of UI elements
+     */
+
     fun updateList()
 }
