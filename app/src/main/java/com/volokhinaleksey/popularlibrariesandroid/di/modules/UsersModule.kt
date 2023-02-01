@@ -28,9 +28,5 @@ interface UsersModule {
         @UsersScope
         @Provides
         fun scopeContainer(app: App): UsersScopeContainer = app
-
-        @UsersScope
-        @Provides
-        fun usersListPresenter(): IUserListPresenter = UsersPresenter.UsersListPresenter()
     }
 }

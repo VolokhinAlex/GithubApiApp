@@ -13,7 +13,6 @@ import com.volokhinaleksey.popularlibrariesandroid.navigation.BackButtonListener
 import com.volokhinaleksey.popularlibrariesandroid.ui.screens.users.adapter.UsersAdapter
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
-import timber.log.Timber
 
 class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
 
@@ -25,11 +24,11 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
     private val usersPresenter by moxyPresenter {
         usersSubcomponent.injectUsersPresenter()
     }
-//    private val usersListAdapter by lazy {
-//        usersSubcomponent.injectUsersAdapter()
-//    }
-
-    private var usersListAdapter: UsersAdapter? = null
+    private val usersListAdapter by lazy {
+        UsersAdapter(usersPresenter.usersListPresenter).apply {
+            usersSubcomponent.injectUsersAdapter(this)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,7 +43,6 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
      */
 
     override fun init() {
-        usersListAdapter = usersSubcomponent.injectUsersAdapter()
         binding.usersListContainer.adapter = usersListAdapter
         binding.usersListContainer.layoutManager = LinearLayoutManager(requireContext())
     }
@@ -55,7 +53,7 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
 
     @SuppressLint("NotifyDataSetChanged")
     override fun updateList() {
-        usersListAdapter?.notifyDataSetChanged()
+        usersListAdapter.notifyDataSetChanged()
     }
 
     override fun onDestroyView() {

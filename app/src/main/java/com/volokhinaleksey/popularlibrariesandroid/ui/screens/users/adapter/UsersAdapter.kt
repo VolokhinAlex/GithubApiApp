@@ -9,10 +9,12 @@ import com.volokhinaleksey.popularlibrariesandroid.ui.images.ImageLoader
 import com.volokhinaleksey.popularlibrariesandroid.ui.items.IUserListPresenter
 import javax.inject.Inject
 
-class UsersAdapter @Inject constructor(
-    private val userListPresenter: IUserListPresenter,
-    private val imageLoader: ImageLoader<ImageView>
+class UsersAdapter(
+    private val userListPresenter: IUserListPresenter
 ) : RecyclerView.Adapter<UsersAdapter.ViewHolder>() {
+
+    @Inject
+    lateinit var imageLoader: ImageLoader<ImageView>
 
     inner class ViewHolder(private val userBinding: ItemUserBinding) :
         RecyclerView.ViewHolder(userBinding.root), UserItemView {

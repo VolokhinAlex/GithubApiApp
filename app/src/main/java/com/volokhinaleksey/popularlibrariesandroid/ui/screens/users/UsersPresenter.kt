@@ -20,7 +20,6 @@ class UsersPresenter @Inject constructor(
     private val router: Router,
     private val screens: IScreens,
     private val uiScheduler: Scheduler,
-    private val usersListPresenter: IUserListPresenter,
     private val usersScopeContainer: UsersScopeContainer
 ) : MvpPresenter<UsersView>() {
 
@@ -55,6 +54,8 @@ class UsersPresenter @Inject constructor(
 
         override fun getItemsCount(): Int = users.size
     }
+
+    val usersListPresenter: IUserListPresenter = UsersListPresenter()
 
     /**
      * Callback after the first presenter init and view binding.

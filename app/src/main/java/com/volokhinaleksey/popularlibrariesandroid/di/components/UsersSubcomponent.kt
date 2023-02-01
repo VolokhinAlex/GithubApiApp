@@ -16,6 +16,6 @@ interface UsersSubcomponent {
 
     fun userSubcomponent(): UserSubcomponent
     fun injectUsersPresenter(): UsersPresenter
-    fun injectUsersAdapter(): UsersAdapter
+    fun injectUsersAdapter(usersAdapter: UsersAdapter)
 
 }

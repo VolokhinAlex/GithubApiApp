@@ -30,16 +30,17 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
     @Inject
     lateinit var imageLoader: ImageLoader<ImageView>
 
-    private var _userSubcomponent: UserSubcomponent? = null
+    private var _userSubcomponent: UserSubcomponent? = App.appInstance.initUserSubcomponent()
 
     private val userPresenter by moxyPresenter {
         UserPresenter(githubUser = userData).apply {
-            _userSubcomponent = App.appInstance.initUserSubcomponent()
             _userSubcomponent?.inject(this)
         }
     }
 
-    private var reposAdapter: ReposAdapter? = null
+    private val reposAdapter: ReposAdapter by lazy {
+        ReposAdapter(userPresenter.userReposListPresenter)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,7 +63,6 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
      */
 
     override fun init() {
-        reposAdapter = _userSubcomponent?.injectReposAdapter()
         binding.reposListContainer.adapter = reposAdapter
         binding.reposListContainer.layoutManager = LinearLayoutManager(requireContext())
     }
@@ -73,7 +73,7 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
 
     @SuppressLint("NotifyDataSetChanged")
     override fun updateList() {
-        reposAdapter?.notifyDataSetChanged()
+        reposAdapter.notifyDataSetChanged()
     }
 
     /**

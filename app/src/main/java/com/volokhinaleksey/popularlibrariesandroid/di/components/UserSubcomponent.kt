@@ -5,7 +5,6 @@ import com.volokhinaleksey.popularlibrariesandroid.di.scopes.UserScope
 import com.volokhinaleksey.popularlibrariesandroid.ui.screens.repo_details.RepoDetailsPresenter
 import com.volokhinaleksey.popularlibrariesandroid.ui.screens.user.UserFragment
 import com.volokhinaleksey.popularlibrariesandroid.ui.screens.user.UserPresenter
-import com.volokhinaleksey.popularlibrariesandroid.ui.screens.user.adapter.ReposAdapter
 import dagger.Subcomponent
 
 @UserScope
@@ -19,6 +18,5 @@ interface UserSubcomponent {
     fun inject(userPresenter: UserPresenter)
     fun inject(userFragment: UserFragment)
     fun injectRepoDetailsPresenter(reposDetailsPresenter: RepoDetailsPresenter)
-    fun injectReposAdapter(): ReposAdapter
 
 }

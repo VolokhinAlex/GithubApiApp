@@ -32,8 +32,7 @@ class UserPresenter(
     @Inject
     lateinit var screens: IScreens
 
-    @Inject
-    lateinit var userReposListPresenter: IUserReposListPresenter
+    val userReposListPresenter: IUserReposListPresenter = UserReposListPresenter()
 
     @Inject
     lateinit var userScopeContainer: UserScopeContainer
