@@ -4,5 +4,5 @@ import com.volokhinaleksey.popularlibrariesandroid.ui.items.ItemView
 
 interface UserItemView : ItemView {
     fun setLogin(login: String)
-    fun setAvatar(url: String)
+    fun setUserAvatar(url: String)
 }

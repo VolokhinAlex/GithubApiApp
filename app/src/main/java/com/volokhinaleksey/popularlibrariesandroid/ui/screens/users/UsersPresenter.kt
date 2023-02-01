@@ -1,6 +1,7 @@
 package com.volokhinaleksey.popularlibrariesandroid.ui.screens.users
 
 import com.github.terrakok.cicerone.Router
+import com.volokhinaleksey.popularlibrariesandroid.di.scopes.UsersScopeContainer
 import com.volokhinaleksey.popularlibrariesandroid.model.GithubUserDTO
 import com.volokhinaleksey.popularlibrariesandroid.navigation.IScreens
 import com.volokhinaleksey.popularlibrariesandroid.repository.GithubUsersRepository
@@ -19,7 +20,8 @@ class UsersPresenter @Inject constructor(
     private val router: Router,
     private val screens: IScreens,
     private val uiScheduler: Scheduler,
-    private val usersListPresenter: IUserListPresenter
+    private val usersListPresenter: IUserListPresenter,
+    private val usersScopeContainer: UsersScopeContainer
 ) : MvpPresenter<UsersView>() {
 
     private val compositeDisposable = CompositeDisposable()
@@ -44,7 +46,7 @@ class UsersPresenter @Inject constructor(
         override fun bindView(view: UserItemView) {
             val user = users[view.pos]
             user.login?.let { view.setLogin(it) }
-            user.avatarUrl?.let { view.setAvatar(it) }
+            user.avatarUrl?.let { view.setUserAvatar(it) }
         }
 
         /**
@@ -89,5 +91,10 @@ class UsersPresenter @Inject constructor(
     fun backPressed(): Boolean {
         router.exit()
         return true
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        usersScopeContainer.releaseUsersScope()
     }
 }

@@ -8,21 +8,28 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.volokhinaleksey.popularlibrariesandroid.app.App
 import com.volokhinaleksey.popularlibrariesandroid.databinding.FragmentUsersBinding
+import com.volokhinaleksey.popularlibrariesandroid.di.components.UsersSubcomponent
 import com.volokhinaleksey.popularlibrariesandroid.navigation.BackButtonListener
+import com.volokhinaleksey.popularlibrariesandroid.ui.screens.users.adapter.UsersAdapter
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
+import timber.log.Timber
 
 class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
 
     private var _binding: FragmentUsersBinding? = null
     private val binding get() = _binding!!
 
+    private val usersSubcomponent: UsersSubcomponent = App.appInstance.initUsersSubcomponent()
+
     private val usersPresenter by moxyPresenter {
-        App.appInstance.appComponent.injectUsersPresenter()
+        usersSubcomponent.injectUsersPresenter()
     }
-    private val usersListAdapter by lazy {
-        App.appInstance.appComponent.injectUsersAdapter()
-    }
+//    private val usersListAdapter by lazy {
+//        usersSubcomponent.injectUsersAdapter()
+//    }
+
+    private var usersListAdapter: UsersAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,6 +44,7 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
      */
 
     override fun init() {
+        usersListAdapter = usersSubcomponent.injectUsersAdapter()
         binding.usersListContainer.adapter = usersListAdapter
         binding.usersListContainer.layoutManager = LinearLayoutManager(requireContext())
     }
@@ -47,7 +55,7 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
 
     @SuppressLint("NotifyDataSetChanged")
     override fun updateList() {
-        usersListAdapter.notifyDataSetChanged()
+        usersListAdapter?.notifyDataSetChanged()
     }
 
     override fun onDestroyView() {

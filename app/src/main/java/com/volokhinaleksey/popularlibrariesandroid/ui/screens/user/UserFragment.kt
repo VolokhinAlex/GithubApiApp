@@ -9,9 +9,11 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.volokhinaleksey.popularlibrariesandroid.app.App
 import com.volokhinaleksey.popularlibrariesandroid.databinding.FragmentUserBinding
+import com.volokhinaleksey.popularlibrariesandroid.di.components.UserSubcomponent
 import com.volokhinaleksey.popularlibrariesandroid.model.GithubUserDTO
 import com.volokhinaleksey.popularlibrariesandroid.navigation.BackButtonListener
 import com.volokhinaleksey.popularlibrariesandroid.repository.*
+import com.volokhinaleksey.popularlibrariesandroid.ui.FragmentInitializer
 import com.volokhinaleksey.popularlibrariesandroid.ui.images.ImageLoader
 import com.volokhinaleksey.popularlibrariesandroid.ui.screens.user.adapter.ReposAdapter
 import com.volokhinaleksey.popularlibrariesandroid.utils.parcelable
@@ -20,31 +22,30 @@ import moxy.ktx.moxyPresenter
 import javax.inject.Inject
 
 class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
+
     private var _binding: FragmentUserBinding? = null
     private val binding get() = _binding!!
-
-    private val userData: GithubUserDTO? by lazy {
-        arguments?.parcelable(ARG_USER_DATA)
-    }
+    private val userData: GithubUserDTO? by lazy { arguments?.parcelable() }
 
     @Inject
     lateinit var imageLoader: ImageLoader<ImageView>
 
+    private var _userSubcomponent: UserSubcomponent? = null
+
     private val userPresenter by moxyPresenter {
         UserPresenter(githubUser = userData).apply {
-            App.appInstance.appComponent.inject(this)
+            _userSubcomponent = App.appInstance.initUserSubcomponent()
+            _userSubcomponent?.inject(this)
         }
     }
 
-    private val reposAdapter: ReposAdapter by lazy {
-        App.appInstance.appComponent.injectReposAdapter()
-    }
+    private var reposAdapter: ReposAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        App.appInstance.appComponent.inject(this)
+        _userSubcomponent?.inject(this)
         _binding = FragmentUserBinding.inflate(inflater)
         return binding.root
     }
@@ -54,23 +55,14 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
         _binding = null
     }
 
-    companion object {
-        const val ARG_USER_DATA = "UserData"
-
-        @JvmStatic
-        fun newInstance(userData: GithubUserDTO) =
-            UserFragment().apply {
-                arguments = Bundle().apply {
-                    putParcelable(ARG_USER_DATA, userData)
-                }
-            }
-    }
+    companion object : FragmentInitializer<GithubUserDTO>
 
     /**
      * Initial initialization list in the Recycler view
      */
 
     override fun init() {
+        reposAdapter = _userSubcomponent?.injectReposAdapter()
         binding.reposListContainer.adapter = reposAdapter
         binding.reposListContainer.layoutManager = LinearLayoutManager(requireContext())
     }
@@ -81,7 +73,7 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
 
     @SuppressLint("NotifyDataSetChanged")
     override fun updateList() {
-        reposAdapter.notifyDataSetChanged()
+        reposAdapter?.notifyDataSetChanged()
     }
 
     /**

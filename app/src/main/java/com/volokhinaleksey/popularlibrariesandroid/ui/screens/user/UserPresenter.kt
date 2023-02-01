@@ -1,11 +1,11 @@
 package com.volokhinaleksey.popularlibrariesandroid.ui.screens.user
 
 import com.github.terrakok.cicerone.Router
+import com.volokhinaleksey.popularlibrariesandroid.di.scopes.UserScopeContainer
 import com.volokhinaleksey.popularlibrariesandroid.model.GithubRepositoryDTO
 import com.volokhinaleksey.popularlibrariesandroid.model.GithubUserDTO
 import com.volokhinaleksey.popularlibrariesandroid.navigation.IScreens
-import com.volokhinaleksey.popularlibrariesandroid.repository.GithubRepositoriesRepository
-import com.volokhinaleksey.popularlibrariesandroid.repository.GithubUsersRepository
+import com.volokhinaleksey.popularlibrariesandroid.repository.GithubUserRepository
 import com.volokhinaleksey.popularlibrariesandroid.ui.items.IUserReposListPresenter
 import com.volokhinaleksey.popularlibrariesandroid.ui.screens.user.adapter.RepoItemView
 import io.reactivex.rxjava3.core.Scheduler
@@ -24,10 +24,7 @@ class UserPresenter(
     lateinit var uiScheduler: Scheduler
 
     @Inject
-    lateinit var userRepo: GithubUsersRepository
-
-    @Inject
-    lateinit var repositoryRepo: GithubRepositoriesRepository
+    lateinit var userRepo: GithubUserRepository
 
     @Inject
     lateinit var router: Router
@@ -37,6 +34,9 @@ class UserPresenter(
 
     @Inject
     lateinit var userReposListPresenter: IUserReposListPresenter
+
+    @Inject
+    lateinit var userScopeContainer: UserScopeContainer
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -103,7 +103,7 @@ class UserPresenter(
 
     private fun loadUserRepositories(user: GithubUserDTO) {
         compositeDisposable.add(
-            repositoryRepo.getUserRepos(user).observeOn(uiScheduler).subscribe({ data ->
+            userRepo.getUserRepos(user).observeOn(uiScheduler).subscribe({ data ->
                 userReposListPresenter.repos.clear()
                 userReposListPresenter.repos.addAll(data)
                 viewState.updateList()
@@ -116,5 +116,10 @@ class UserPresenter(
     fun backPressed(): Boolean {
         router.exit()
         return true
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        userScopeContainer.releaseUserScope()
     }
 }

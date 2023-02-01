@@ -19,7 +19,7 @@ class MainActivity : MvpAppCompatActivity(), MainView {
     private var _binding: ActivityMainBinding? = null
     private val binding: ActivityMainBinding get() = _binding!!
 
-    private val presenter by moxyPresenter {
+    private val mainPresenter by moxyPresenter {
         App.appInstance.appComponent.injectMainPresenter()
     }
     private val navigator = AppNavigator(this, R.id.screens_container)
@@ -48,6 +48,6 @@ class MainActivity : MvpAppCompatActivity(), MainView {
                 return
             }
         }
-        presenter.backClicked()
+        mainPresenter.backClicked()
     }
 }
