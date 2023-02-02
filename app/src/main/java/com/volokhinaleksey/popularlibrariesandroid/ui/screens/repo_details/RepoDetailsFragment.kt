@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.volokhinaleksey.popularlibrariesandroid.app.App
 import com.volokhinaleksey.popularlibrariesandroid.databinding.FragmentRepoDetailsBinding
-import com.volokhinaleksey.popularlibrariesandroid.di.components.UserSubcomponent
 import com.volokhinaleksey.popularlibrariesandroid.model.GithubRepositoryDTO
 import com.volokhinaleksey.popularlibrariesandroid.navigation.BackButtonListener
 import com.volokhinaleksey.popularlibrariesandroid.ui.FragmentInitializer
@@ -23,12 +22,9 @@ class RepoDetailsFragment : MvpAppCompatFragment(), RepoDetailsView, BackButtonL
     private var _binding: FragmentRepoDetailsBinding? = null
     private val binding get() = _binding!!
 
-    private var _userSubcomponent: UserSubcomponent? = null
-
     private val detailsPresenter by moxyPresenter {
         RepoDetailsPresenter(detailsRepoData).apply {
-            _userSubcomponent = App.appInstance.initUserSubcomponent()
-            _userSubcomponent?.injectRepoDetailsPresenter(this)
+            App.appInstance.userSubcomponent?.injectRepoDetailsPresenter(this)
         }
     }
 
