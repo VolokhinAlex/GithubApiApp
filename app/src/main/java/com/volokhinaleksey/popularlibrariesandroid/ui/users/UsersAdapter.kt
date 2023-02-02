@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.volokhinaleksey.popularlibrariesandroid.databinding.ItemUserBinding
-import com.volokhinaleksey.popularlibrariesandroid.presenter.IUserListPresenter
+import com.volokhinaleksey.popularlibrariesandroid.presentation.IUserListPresenter
 import com.volokhinaleksey.popularlibrariesandroid.ui.UserItemView
 
 class UsersAdapter(val presenter: IUserListPresenter) :
