@@ -79,6 +79,7 @@ class UserPresenter(
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
+        viewState.loadingState()
         viewState.init()
         githubUser?.let {
             getUserInfoByLogin(it)
@@ -99,6 +100,7 @@ class UserPresenter(
             userRepo.getUserByLogin(user).observeOn(uiScheduler).subscribe({ data ->
                 viewState.setUserData(data)
             }, {
+                viewState.errorState(it.message.orEmpty())
                 Timber.e("$SERVER_ERROR: $it")
             })
         )
@@ -114,8 +116,10 @@ class UserPresenter(
             userRepo.getUserRepos(user).observeOn(uiScheduler).subscribe({ data ->
                 userReposListPresenter.repos.clear()
                 userReposListPresenter.repos.addAll(data)
+                viewState.successState()
                 viewState.updateList()
             }, { error ->
+                viewState.errorState(error.message.orEmpty())
                 Timber.e("$SERVER_ERROR: $error")
             })
         )

@@ -86,7 +86,10 @@ class RoomUserCacheImpl
         userDTO.login?.let {
             val roomUser = localDatabase.userDao.getUserByLogin(it)
             val roomRepos = repositories.map { user ->
-                convertGithubRepositoryToRoomGithubUserRepo(user, roomUser?.id)
+                convertGithubRepositoryToRoomGithubUserRepo(
+                    githubRepo = user,
+                    userId = roomUser?.id
+                )
             }
             localDatabase.repositoryDao.upsert(roomRepos)
         }
@@ -106,7 +109,7 @@ class RoomUserCacheImpl
             val roomUser = user.login?.let { localDatabase.userDao.getUserByLogin(it) }
             localDatabase.repositoryDao.getRepositoriesByUserId(userId = roomUser?.id.toString())
                 .map { roomGithubUser ->
-                    convertRoomGithubUserRepoToGithubRepository(roomGithubUser)
+                    convertRoomGithubUserRepoToGithubRepository(roomGithubRepo = roomGithubUser)
                 }
         }
 
@@ -122,7 +125,7 @@ class RoomUserCacheImpl
     override fun cacheUserToDatabase(
         githubUser: GithubUserDTO,
     ): Single<GithubUserDTO> = Single.fromCallable {
-        val roomUsers = convertGithubUserToRoomGithubUser(githubUser)
+        val roomUsers = convertGithubUserToRoomGithubUser(githubUser = githubUser)
         localDatabase.userDao.upsert(roomUsers)
         githubUser
     }
@@ -138,7 +141,7 @@ class RoomUserCacheImpl
     override fun getUserDataFromDatabase(user: GithubUserDTO): Single<GithubUserDTO> =
         Single.fromCallable {
             localDatabase.userDao.getUserByLogin(user.login.orEmpty())
-                ?.let { convertRoomGithubUserToGithubUser(it) }
+                ?.let { convertRoomGithubUserToGithubUser(roomGithubUser = it) }
         }
 
 }

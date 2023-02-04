@@ -53,7 +53,7 @@ class RoomGithubUsersCacheImpl @Inject constructor(
         users: List<GithubUserDTO>,
     ): Single<List<GithubUserDTO>> = Single.fromCallable {
         val roomUsers = users.map { user ->
-            convertGithubUserToRoomGithubUser(user)
+            convertGithubUserToRoomGithubUser(githubUser = user)
         }
         localDatabase.userDao.upsert(roomUsers)
         users
@@ -68,7 +68,7 @@ class RoomGithubUsersCacheImpl @Inject constructor(
     override fun getUsersDataFromDatabase(): Single<List<GithubUserDTO>> =
         Single.fromCallable {
             localDatabase.userDao.getAll().map { roomGithubUser ->
-                convertRoomGithubUserToGithubUser(roomGithubUser)
+                convertRoomGithubUserToGithubUser(roomGithubUser = roomGithubUser)
             }
         }
 

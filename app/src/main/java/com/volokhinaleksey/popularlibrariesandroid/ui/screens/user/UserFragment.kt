@@ -30,11 +30,12 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
     @Inject
     lateinit var imageLoader: ImageLoader<ImageView>
 
-    private var _userSubcomponent: UserSubcomponent? = App.appInstance.initUserSubcomponent()
+    private var _userSubcomponent: UserSubcomponent? = null
 
     private val userPresenter by moxyPresenter {
         UserPresenter(githubUser = userData).apply {
-            _userSubcomponent?.inject(this)
+            _userSubcomponent = App.appInstance.initUserSubcomponent()
+            _userSubcomponent?.injectUserPresenter(userPresenter = this)
         }
     }
 
@@ -46,7 +47,7 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _userSubcomponent?.inject(this)
+        App.appInstance.userSubcomponent?.injectUserFragment(userFragment = this)
         _binding = FragmentUserBinding.inflate(inflater)
         return binding.root
     }
@@ -91,7 +92,32 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
         binding.following.text = following.toString()
         binding.publicRepos.text = publicRepos.toString()
         binding.publicGists.text = publicGists.toString()
-        githubUser.avatarUrl?.let { imageLoader.loadImage(it, binding.userImage) }
+        githubUser.avatarUrl?.let { imageLoader.loadImage(url = it, target = binding.userImage) }
+    }
+
+    /**
+     * Showing the progress bar during loading data
+     */
+
+    override fun loadingState() {
+        binding.progressBar.visibility = View.VISIBLE
+    }
+
+    /**
+     * Hiding the progress bar when data is loaded
+     */
+
+    override fun successState() {
+        binding.progressBar.visibility = View.GONE
+    }
+
+    /**
+     * Error display when loading data
+     */
+
+    override fun errorState(message: String) {
+        binding.progressBar.visibility = View.GONE
+        binding.errorMessage.text = message
     }
 
     override fun backPressed(): Boolean = userPresenter.backPressed()

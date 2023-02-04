@@ -28,7 +28,7 @@ class MainActivity : MvpAppCompatActivity(), MainView {
         super.onCreate(savedInstanceState)
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        App.appInstance.appComponent.inject(this)
+        App.appInstance.appComponent.injectMainActivity(this)
     }
 
     override fun onResumeFragments() {

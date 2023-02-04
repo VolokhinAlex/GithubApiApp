@@ -19,6 +19,6 @@ import javax.inject.Singleton
 )
 interface AppComponent {
     fun usersSubcomponent(): UsersSubcomponent
-    fun inject(mainActivity: MainActivity)
+    fun injectMainActivity(mainActivity: MainActivity)
     fun injectMainPresenter(): MainPresenter
 }

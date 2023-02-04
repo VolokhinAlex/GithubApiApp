@@ -21,15 +21,15 @@ interface IScreens {
 
     /**
      * Details screen about a specific user [UserFragment]
-     * @param data - Data class with user information
+     * @param githubUserDTO - Data class with user information
      */
 
-    fun userDetailScreen(data: GithubUserDTO): Screen
+    fun userDetailScreen(githubUserDTO: GithubUserDTO): Screen
 
     /**
      * User Repository Information Screen [RepoDetailsFragment]
-     * @param data - Data class with repository information
+     * @param githubRepositoryDTO - Data class with repository information
      */
 
-    fun repoDetailsScreen(data: GithubRepositoryDTO): Screen
+    fun repoDetailsScreen(githubRepositoryDTO: GithubRepositoryDTO): Screen
 }

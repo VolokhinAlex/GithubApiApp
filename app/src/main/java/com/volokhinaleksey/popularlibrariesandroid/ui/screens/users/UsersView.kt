@@ -21,4 +21,22 @@ interface UsersView : MvpView {
      */
 
     fun updateList()
+
+    /**
+     * Data loading state
+     */
+
+    fun loadingState()
+
+    /**
+     * The state when the data is loaded
+     */
+
+    fun successState()
+
+    /**
+     * Error state when loading data
+     */
+
+    fun errorState(message: String)
 }

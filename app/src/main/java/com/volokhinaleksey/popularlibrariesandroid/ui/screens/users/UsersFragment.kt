@@ -19,14 +19,15 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
     private var _binding: FragmentUsersBinding? = null
     private val binding get() = _binding!!
 
-    private val usersSubcomponent: UsersSubcomponent = App.appInstance.initUsersSubcomponent()
+    private var usersSubcomponent: UsersSubcomponent? = null
 
     private val usersPresenter by moxyPresenter {
-        usersSubcomponent.injectUsersPresenter()
+        usersSubcomponent = App.appInstance.initUsersSubcomponent()
+        usersSubcomponent!!.injectUsersPresenter()
     }
     private val usersListAdapter by lazy {
         UsersAdapter(usersPresenter.usersListPresenter).apply {
-            usersSubcomponent.injectUsersAdapter(this)
+            App.appInstance.usersSubcomponent?.injectUsersAdapter(usersAdapter = this)
         }
     }
 
@@ -54,6 +55,31 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
     @SuppressLint("NotifyDataSetChanged")
     override fun updateList() {
         usersListAdapter.notifyDataSetChanged()
+    }
+
+    /**
+     * Showing the progress bar during loading data
+     */
+
+    override fun loadingState() {
+        binding.progressBar.visibility = View.VISIBLE
+    }
+
+    /**
+     * Hiding the progress bar when data is loaded
+     */
+
+    override fun successState() {
+        binding.progressBar.visibility = View.GONE
+    }
+
+    /**
+     * Error display when loading data
+     */
+
+    override fun errorState(message: String) {
+        binding.progressBar.visibility = View.GONE
+        binding.errorMessage.text = message
     }
 
     override fun onDestroyView() {
