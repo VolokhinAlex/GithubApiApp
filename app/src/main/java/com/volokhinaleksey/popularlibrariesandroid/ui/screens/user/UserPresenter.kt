@@ -12,54 +12,96 @@ import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import moxy.MvpPresenter
 import timber.log.Timber
+import javax.inject.Inject
 
 private const val SERVER_ERROR = "Server Error"
 
 class UserPresenter(
-    private val userRepo: GithubUsersRepository,
-    private val repositoryRepo: GithubRepositoriesRepository,
-    private val uiScheduler: Scheduler,
-    private val router: Router,
-    private val screens: IScreens,
     private val githubUser: GithubUserDTO?
 ) : MvpPresenter<UserView>() {
+
+    @Inject
+    lateinit var uiScheduler: Scheduler
+
+    @Inject
+    lateinit var userRepo: GithubUsersRepository
+
+    @Inject
+    lateinit var repositoryRepo: GithubRepositoriesRepository
+
+    @Inject
+    lateinit var router: Router
+
+    @Inject
+    lateinit var screens: IScreens
+
+    @Inject
+    lateinit var userReposListPresenter: IUserReposListPresenter
 
     private val compositeDisposable = CompositeDisposable()
 
     class UserReposListPresenter : IUserReposListPresenter {
-        val repos = mutableListOf<GithubRepositoryDTO>()
+        override val repos = mutableListOf<GithubRepositoryDTO>()
+
+        /**
+         * Events of clicking on a list item
+         */
+
         override var onItemClickListener: ((RepoItemView) -> Unit)? = null
+
+        /**
+         * Filling the list with data
+         */
 
         override fun bindView(view: RepoItemView) {
             repos[view.pos].name?.let { view.setRepoName(it) }
         }
 
+        /**
+         * Getting the list size
+         */
+
         override fun getItemsCount(): Int = repos.size
     }
 
-    val userReposListPresenter = UserReposListPresenter()
+    /**
+     * Callback after the first presenter init and view binding.
+     * If this presenter instance will have to attach more views in the future, this method will not be called.
+     */
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.init()
-        githubUser?.let { getUserInfoByLogin(it) }
+        githubUser?.let {
+            getUserInfoByLogin(it)
+            loadUserRepositories(it)
+        }
         userReposListPresenter.onItemClickListener = {
             router.navigateTo(screens.repoDetailsScreen(userReposListPresenter.repos[it.pos]))
         }
     }
 
+    /**
+     * Method for getting user data by login from the repository
+     * @param user - A user data.
+     */
+
     private fun getUserInfoByLogin(user: GithubUserDTO) {
         compositeDisposable.add(
             userRepo.getUserByLogin(user).observeOn(uiScheduler).subscribe({ data ->
                 viewState.setUserData(data)
-                data.login?.let { loadData(data) }
             }, {
                 Timber.e("$SERVER_ERROR: $it")
             })
         )
     }
 
-    private fun loadData(user: GithubUserDTO) {
+    /**
+     * Method for getting a list of user's repositories from the repository
+     * @param user - A user data.
+     */
+
+    private fun loadUserRepositories(user: GithubUserDTO) {
         compositeDisposable.add(
             repositoryRepo.getUserRepos(user).observeOn(uiScheduler).subscribe({ data ->
                 userReposListPresenter.repos.clear()

@@ -1,66 +1,63 @@
 package com.volokhinaleksey.popularlibrariesandroid.repository
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import com.volokhinaleksey.popularlibrariesandroid.app.App
 import com.volokhinaleksey.popularlibrariesandroid.model.GithubUserDTO
 import com.volokhinaleksey.popularlibrariesandroid.room.GithubRoomDatabase
 import com.volokhinaleksey.popularlibrariesandroid.utils.convertGithubUserToRoomGithubUser
 import io.reactivex.rxjava3.core.Single
-import java.io.FileOutputStream
-import java.net.URL
+import javax.inject.Inject
 
 
 interface UsersCache {
     fun cacheUsersToDatabase(
         users: List<GithubUserDTO>,
-        localDatabase: GithubRoomDatabase
     ): Single<List<GithubUserDTO>>
 
     fun cacheUserToDatabase(
         githubUser: GithubUserDTO,
-        localDatabase: GithubRoomDatabase
     ): Single<GithubUserDTO>
 }
 
-class RoomGithubUsersCacheImpl : UsersCache {
+/**
+ * Implementation of an interface for caching data to a local sqlite database under Room management
+ *
+ * @param localDatabase - A local database instance that is automatically injected using dagger
+ */
+
+class RoomGithubUsersCacheImpl @Inject constructor(private val localDatabase: GithubRoomDatabase) :
+    UsersCache {
+
+    /**
+     * The method writes a list of users to the database
+     *
+     * @param users - A class with the list of user data
+     *
+     * @return - The method returns a single RxJava object, in which the list of users is wrapped.
+     */
 
     override fun cacheUsersToDatabase(
         users: List<GithubUserDTO>,
-        localDatabase: GithubRoomDatabase
     ): Single<List<GithubUserDTO>> = Single.fromCallable {
         val roomUsers = users.map { user ->
-            user.imageUrlFromStorage = cacheImageToLocalDatabase(user)
             convertGithubUserToRoomGithubUser(user)
         }
-        localDatabase.userDao.insert(roomUsers)
+        localDatabase.userDao.upsert(roomUsers)
         users
     }
 
+    /**
+     * The method writes a user info to the database
+     *
+     * @param githubUser - A class with the user data
+     *
+     * @return - The method returns a single RxJava object, in which the user info is wrapped.
+     */
+
     override fun cacheUserToDatabase(
         githubUser: GithubUserDTO,
-        localDatabase: GithubRoomDatabase
     ): Single<GithubUserDTO> = Single.fromCallable {
-        githubUser.imageUrlFromStorage = cacheImageToLocalDatabase(githubUser)
         val roomUsers = convertGithubUserToRoomGithubUser(githubUser)
-        localDatabase.userDao.insert(roomUsers)
+        localDatabase.userDao.upsert(roomUsers)
         githubUser
     }
 
-}
-
-private fun cacheImageToLocalDatabase(githubUser: GithubUserDTO): String {
-    try {
-        val url = URL(githubUser.avatarUrl)
-        val bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream())
-        val imageName = githubUser.avatarUrl?.substring(githubUser.avatarUrl.indexOf("u/") + 2)
-        val path = "${App.appInstance.cacheDir}/$imageName.png"
-        val outPutStream = FileOutputStream(path)
-        if (bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outPutStream)) {
-            return path
-        }
-    } catch (e: java.lang.Exception) {
-        e.printStackTrace()
-    }
-    return ""
 }

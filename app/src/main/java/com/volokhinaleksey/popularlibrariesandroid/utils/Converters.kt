@@ -18,7 +18,6 @@ fun convertGithubUserToRoomGithubUser(githubUser: GithubUserDTO): RoomGithubUser
         company = githubUser.company,
         blog = githubUser.blog,
         location = githubUser.location,
-        imageUrlFromStorage = githubUser.imageUrlFromStorage,
         url =  githubUser.url,
         reposUrl = githubUser.reposUrl
     )
@@ -36,7 +35,6 @@ fun convertRoomGithubUserToGithubUser(roomGithubUser: RoomGithubUser): GithubUse
         company = roomGithubUser.company,
         blog = roomGithubUser.blog,
         location = roomGithubUser.location,
-        imageUrlFromStorage = roomGithubUser.imageUrlFromStorage,
         url =  roomGithubUser.url,
         reposUrl = roomGithubUser.reposUrl
     )

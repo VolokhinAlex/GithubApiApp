@@ -5,9 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.volokhinaleksey.popularlibrariesandroid.databinding.ItemRepoBinding
 import com.volokhinaleksey.popularlibrariesandroid.ui.items.IUserReposListPresenter
+import javax.inject.Inject
 
-class ReposAdapter(private val presenter: IUserReposListPresenter) :
-    RecyclerView.Adapter<ReposAdapter.ViewHolder>() {
+class ReposAdapter @Inject constructor(
+    private val presenter: IUserReposListPresenter
+) : RecyclerView.Adapter<ReposAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(

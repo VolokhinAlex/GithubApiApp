@@ -10,33 +10,54 @@ import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import moxy.MvpPresenter
 import timber.log.Timber
+import javax.inject.Inject
 
 private const val SERVER_ERROR = "Server Error"
 
-class UsersPresenter(
+class UsersPresenter @Inject constructor(
     private val usersRepository: GithubUsersRepository,
     private val router: Router,
+    private val screens: IScreens,
     private val uiScheduler: Scheduler,
-    private val screens: IScreens
+    private val usersListPresenter: IUserListPresenter
 ) : MvpPresenter<UsersView>() {
 
     private val compositeDisposable = CompositeDisposable()
 
+    /**
+     * A class for interacting with a list of elementsG
+     */
+
     class UsersListPresenter : IUserListPresenter {
-        val users = mutableListOf<GithubUserDTO>()
+        override val users = mutableListOf<GithubUserDTO>()
+
+        /**
+         * Events of clicking on a list item
+         */
+
         override var onItemClickListener: ((UserItemView) -> Unit)? = null
+
+        /**
+         * Filling the list with data
+         */
 
         override fun bindView(view: UserItemView) {
             val user = users[view.pos]
             user.login?.let { view.setLogin(it) }
-            user.imageUrlFromStorage?.let { view.setAvatar(it) }
+            user.avatarUrl?.let { view.setAvatar(it) }
         }
 
-        override fun getItemsCount(): Int = users.size
+        /**
+         * Getting the list size
+         */
 
+        override fun getItemsCount(): Int = users.size
     }
 
-    val usersListPresenter = UsersListPresenter()
+    /**
+     * Callback after the first presenter init and view binding.
+     * If this presenter instance will have to attach more views in the future, this method will not be called.
+     */
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -46,6 +67,10 @@ class UsersPresenter(
             router.navigateTo(screens.userDetailScreen(usersListPresenter.users[it.pos]))
         }
     }
+
+    /**
+     * Method for getting data from the repository
+     */
 
     private fun loadData() {
         compositeDisposable.add(

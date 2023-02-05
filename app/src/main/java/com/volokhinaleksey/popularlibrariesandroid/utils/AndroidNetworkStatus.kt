@@ -10,6 +10,10 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 
+/**
+ * Implementation of the interface for receiving data from the network on smartphones with Android OS
+ */
+
 class AndroidNetworkStatus(context: Context) : NetworkStatus {
     private val statusSubject: BehaviorSubject<Boolean> = BehaviorSubject.create()
 

@@ -9,15 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.volokhinaleksey.popularlibrariesandroid.app.App
 import com.volokhinaleksey.popularlibrariesandroid.databinding.FragmentUsersBinding
 import com.volokhinaleksey.popularlibrariesandroid.navigation.BackButtonListener
-import com.volokhinaleksey.popularlibrariesandroid.navigation.NavigationScreens
-import com.volokhinaleksey.popularlibrariesandroid.repository.GithubApiHolder
-import com.volokhinaleksey.popularlibrariesandroid.repository.GithubUsersRepositoryImpl
-import com.volokhinaleksey.popularlibrariesandroid.repository.RoomGithubUsersCacheImpl
-import com.volokhinaleksey.popularlibrariesandroid.room.GithubRoomDatabase
-import com.volokhinaleksey.popularlibrariesandroid.ui.images.CachedImageLoader
-import com.volokhinaleksey.popularlibrariesandroid.ui.screens.users.adapter.UsersAdapter
-import com.volokhinaleksey.popularlibrariesandroid.utils.AndroidNetworkStatus
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 
@@ -26,24 +17,11 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
     private var _binding: FragmentUsersBinding? = null
     private val binding get() = _binding!!
 
-    private val presenter by moxyPresenter {
-        UsersPresenter(
-            usersRepository = GithubUsersRepositoryImpl(
-                remoteApiSource = GithubApiHolder.githubApi,
-                networkStatus = AndroidNetworkStatus(requireContext()),
-                localDatabase = GithubRoomDatabase.getInstance(),
-                roomGithubUsersCache = RoomGithubUsersCacheImpl()
-            ),
-            router = App.appInstance.router,
-            uiScheduler = AndroidSchedulers.mainThread(),
-            screens = NavigationScreens()
-        )
+    private val usersPresenter by moxyPresenter {
+        App.appInstance.appComponent.injectUsersPresenter()
     }
     private val usersListAdapter by lazy {
-        UsersAdapter(
-            presenter = presenter.usersListPresenter,
-            imageLoader = CachedImageLoader() // CoilImageLoader
-        )
+        App.appInstance.appComponent.injectUsersAdapter()
     }
 
     override fun onCreateView(
@@ -54,10 +32,18 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
         return binding.root
     }
 
+    /**
+     * Initial initialization list in the Recycler view
+     */
+
     override fun init() {
         binding.usersListContainer.adapter = usersListAdapter
         binding.usersListContainer.layoutManager = LinearLayoutManager(requireContext())
     }
+
+    /**
+     * Updating the list in the Recycler view
+     */
 
     @SuppressLint("NotifyDataSetChanged")
     override fun updateList() {
@@ -69,7 +55,10 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
         _binding = null
     }
 
-    override fun backPressed(): Boolean = presenter.backPressed()
+    companion object {
+        @JvmStatic
+        fun newInstance() = UsersFragment()
+    }
 
-
+    override fun backPressed(): Boolean = usersPresenter.backPressed()
 }

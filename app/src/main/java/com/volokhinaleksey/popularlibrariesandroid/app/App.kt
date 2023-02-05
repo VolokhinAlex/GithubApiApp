@@ -1,25 +1,20 @@
 package com.volokhinaleksey.popularlibrariesandroid.app
 
 import android.app.Application
-import com.github.terrakok.cicerone.Cicerone
-import com.github.terrakok.cicerone.Router
-import com.volokhinaleksey.popularlibrariesandroid.room.GithubRoomDatabase
+import com.volokhinaleksey.popularlibrariesandroid.di.components.AppComponent
+import com.volokhinaleksey.popularlibrariesandroid.di.components.DaggerAppComponent
+import com.volokhinaleksey.popularlibrariesandroid.di.modules.AppModule
 import timber.log.Timber
 
 class App : Application() {
 
-    private val cicerone: Cicerone<Router> by lazy {
-        Cicerone.create()
-    }
-
-    val navigatorHolder get() = cicerone.getNavigatorHolder()
-    val router get() = cicerone.router
+    lateinit var appComponent: AppComponent
 
     override fun onCreate() {
         super.onCreate()
         appInstance = this
+        appComponent = DaggerAppComponent.builder().appModule(AppModule(this)).build()
         Timber.plant(Timber.DebugTree())
-        GithubRoomDatabase.createDatabase(this)
     }
 
     companion object {
