@@ -1,10 +1,10 @@
 package com.volokhinaleksey.popularlibrariesandroid.repository
 
-import com.volokhinaleksey.popularlibrariesandroid.model.GithubUser
-import com.volokhinaleksey.popularlibrariesandroid.model.GithubUserRepo
+import com.volokhinaleksey.popularlibrariesandroid.model.GithubRepositoryDTO
+import com.volokhinaleksey.popularlibrariesandroid.model.GithubUserDTO
 import io.reactivex.rxjava3.core.Single
 import retrofit2.http.GET
-import retrofit2.http.Path
+import retrofit2.http.Url
 
 /**
  * Interface for interacting with the Github API
@@ -17,19 +17,19 @@ interface GithubApiService {
      */
 
     @GET("/users")
-    fun getUsers(): Single<List<GithubUser>>
+    fun getUsers(): Single<List<GithubUserDTO>>
 
     /**
      * Method for getting a list of user's repositories from the Github site
      */
 
-    @GET("users/{user}/repos")
-    fun getUserRepos(@Path("user") user: String): Single<List<GithubUserRepo>>
+    @GET
+    fun getUserRepos(@Url reposUrl: String): Single<List<GithubRepositoryDTO>>
 
     /**
      * A method for obtaining information about a specific user by his login on the Github site
      */
 
-    @GET("users/{user}")
-    fun getUserByLogin(@Path("user") user: String): Single<GithubUser>
+    @GET
+    fun getUser(@Url userUrl: String): Single<GithubUserDTO>
 }

@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.volokhinaleksey.popularlibrariesandroid.app.App
 import com.volokhinaleksey.popularlibrariesandroid.databinding.FragmentRepoDetailsBinding
-import com.volokhinaleksey.popularlibrariesandroid.model.GithubUserRepo
+import com.volokhinaleksey.popularlibrariesandroid.model.GithubRepositoryDTO
 import com.volokhinaleksey.popularlibrariesandroid.navigation.BackButtonListener
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
@@ -16,7 +16,7 @@ import moxy.ktx.moxyPresenter
 private const val ARG_DETAILS_REPO = "Details Repo"
 
 class RepoDetailsFragment : MvpAppCompatFragment(), RepoDetailsView, BackButtonListener {
-    private var detailsRepoData: GithubUserRepo? = null
+    private var detailsRepoData: GithubRepositoryDTO? = null
     private var _binding: FragmentRepoDetailsBinding? = null
     private val binding get() = _binding!!
 
@@ -54,7 +54,7 @@ class RepoDetailsFragment : MvpAppCompatFragment(), RepoDetailsView, BackButtonL
 
     companion object {
         @JvmStatic
-        fun newInstance(repoData: GithubUserRepo) =
+        fun newInstance(repoData: GithubRepositoryDTO) =
             RepoDetailsFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable(ARG_DETAILS_REPO, repoData)

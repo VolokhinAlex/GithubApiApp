@@ -3,6 +3,8 @@ package com.volokhinaleksey.popularlibrariesandroid.app
 import android.app.Application
 import com.github.terrakok.cicerone.Cicerone
 import com.github.terrakok.cicerone.Router
+import com.volokhinaleksey.popularlibrariesandroid.room.GithubRoomDatabase
+import timber.log.Timber
 
 class App : Application() {
 
@@ -16,6 +18,8 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         appInstance = this
+        Timber.plant(Timber.DebugTree())
+        GithubRoomDatabase.createDatabase(this)
     }
 
     companion object {

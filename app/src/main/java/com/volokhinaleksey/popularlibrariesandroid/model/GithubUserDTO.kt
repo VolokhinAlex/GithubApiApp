@@ -23,7 +23,7 @@ import kotlinx.parcelize.Parcelize
  */
 
 @Parcelize
-data class GithubUser(
+data class GithubUserDTO(
     @Expose
     val login: String?,
     @Expose
@@ -45,5 +45,10 @@ data class GithubUser(
     @Expose
     val blog: String?,
     @Expose
-    val location: String?
+    val location: String?,
+    @Expose
+    val url: String?,
+    @Expose
+    val reposUrl: String?,
+    var imageUrlFromStorage: String?
 ) : Parcelable
