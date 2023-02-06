@@ -101,6 +101,7 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
 
     override fun loadingState() {
         binding.progressBar.visibility = View.VISIBLE
+        binding.userDetailsContainer?.visibility = View.GONE
     }
 
     /**
@@ -109,6 +110,7 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
 
     override fun successState() {
         binding.progressBar.visibility = View.GONE
+        binding.userDetailsContainer?.visibility = View.VISIBLE
     }
 
     /**
@@ -116,6 +118,7 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
      */
 
     override fun errorState(message: String) {
+        binding.userDetailsContainer?.visibility = View.GONE
         binding.progressBar.visibility = View.GONE
         binding.errorMessage.text = message
     }

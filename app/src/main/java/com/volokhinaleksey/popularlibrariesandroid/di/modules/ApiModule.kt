@@ -25,7 +25,7 @@ interface ApiModule {
 
     @Singleton
     @Binds
-    fun apiService(impl: GithubApiHolder): ApiHolder
+    fun apiService(apiHolder: GithubApiHolder): ApiHolder
 
     companion object {
 

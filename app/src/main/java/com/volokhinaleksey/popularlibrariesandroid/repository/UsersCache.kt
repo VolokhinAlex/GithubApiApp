@@ -2,8 +2,8 @@ package com.volokhinaleksey.popularlibrariesandroid.repository
 
 import com.volokhinaleksey.popularlibrariesandroid.model.GithubUserDTO
 import com.volokhinaleksey.popularlibrariesandroid.room.GithubRoomDatabase
-import com.volokhinaleksey.popularlibrariesandroid.utils.convertGithubUserToRoomGithubUser
-import com.volokhinaleksey.popularlibrariesandroid.utils.convertRoomGithubUserToGithubUser
+import com.volokhinaleksey.popularlibrariesandroid.utils.mapToRoomGithubUser
+import com.volokhinaleksey.popularlibrariesandroid.utils.mapToGithubUser
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
@@ -53,7 +53,7 @@ class RoomGithubUsersCacheImpl @Inject constructor(
         users: List<GithubUserDTO>,
     ): Single<List<GithubUserDTO>> = Single.fromCallable {
         val roomUsers = users.map { user ->
-            convertGithubUserToRoomGithubUser(githubUser = user)
+            mapToRoomGithubUser(githubUser = user)
         }
         localDatabase.userDao.upsert(roomUsers)
         users
@@ -68,7 +68,7 @@ class RoomGithubUsersCacheImpl @Inject constructor(
     override fun getUsersDataFromDatabase(): Single<List<GithubUserDTO>> =
         Single.fromCallable {
             localDatabase.userDao.getAll().map { roomGithubUser ->
-                convertRoomGithubUserToGithubUser(roomGithubUser = roomGithubUser)
+                mapToGithubUser(roomGithubUser = roomGithubUser)
             }
         }
 

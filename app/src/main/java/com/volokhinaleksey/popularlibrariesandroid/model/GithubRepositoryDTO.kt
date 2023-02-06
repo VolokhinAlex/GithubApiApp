@@ -30,5 +30,7 @@ data class GithubRepositoryDTO(
     @Expose
     val createdAt: String?,
     @Expose
-    val forks: Long?
+    val forks: Long?,
+    @Expose
+    val commitsUrl: String?
 ) : Parcelable

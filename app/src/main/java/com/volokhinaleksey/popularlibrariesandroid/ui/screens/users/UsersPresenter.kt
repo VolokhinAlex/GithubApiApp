@@ -44,8 +44,8 @@ class UsersPresenter @Inject constructor(
 
         override fun bindView(view: UserItemView) {
             val user = users[view.pos]
-            user.login?.let { view.setLogin(it) }
-            user.avatarUrl?.let { view.setUserAvatar(it) }
+            view.setLogin(user.login.orEmpty())
+            view.setUserAvatar(user.avatarUrl.orEmpty())
         }
 
         /**
@@ -86,7 +86,7 @@ class UsersPresenter @Inject constructor(
                     viewState.successState()
                     viewState.updateList()
                 }, { error ->
-                    viewState.errorState(error.message.orEmpty())
+                    viewState.errorState(message = error.message.orEmpty())
                     Timber.e("$SERVER_ERROR: $error")
                 })
         )

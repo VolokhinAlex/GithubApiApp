@@ -62,7 +62,7 @@ class UserPresenter(
          */
 
         override fun bindView(view: RepoItemView) {
-            repos[view.pos].name?.let { view.setRepoName(it) }
+            view.setRepoName(repos[view.pos].name.orEmpty())
         }
 
         /**
@@ -82,8 +82,8 @@ class UserPresenter(
         viewState.loadingState()
         viewState.init()
         githubUser?.let {
-            getUserInfoByLogin(it)
-            loadUserRepositories(it)
+            getUserInfoByLogin(user = it)
+            loadUserRepositories(user = it)
         }
         userReposListPresenter.onItemClickListener = {
             router.navigateTo(screens.repoDetailsScreen(userReposListPresenter.repos[it.pos]))
@@ -97,10 +97,10 @@ class UserPresenter(
 
     private fun getUserInfoByLogin(user: GithubUserDTO) {
         compositeDisposable.add(
-            userRepo.getUserByLogin(user).observeOn(uiScheduler).subscribe({ data ->
-                viewState.setUserData(data)
+            userRepo.getUserByLogin(user = user).observeOn(uiScheduler).subscribe({ data ->
+                viewState.setUserData(githubUser = data)
             }, {
-                viewState.errorState(it.message.orEmpty())
+                viewState.errorState(message = it.message.orEmpty())
                 Timber.e("$SERVER_ERROR: $it")
             })
         )
@@ -119,7 +119,7 @@ class UserPresenter(
                 viewState.successState()
                 viewState.updateList()
             }, { error ->
-                viewState.errorState(error.message.orEmpty())
+                viewState.errorState(message = error.message.orEmpty())
                 Timber.e("$SERVER_ERROR: $error")
             })
         )
