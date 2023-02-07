@@ -9,10 +9,12 @@ import com.volokhinaleksey.popularlibrariesandroid.ui.images.ImageLoader
 import com.volokhinaleksey.popularlibrariesandroid.ui.items.IUserListPresenter
 import javax.inject.Inject
 
-class UsersAdapter @Inject constructor(
-    private val presenter: IUserListPresenter,
-    private val imageLoader: ImageLoader<ImageView>
+class UsersAdapter(
+    private val userListPresenter: IUserListPresenter
 ) : RecyclerView.Adapter<UsersAdapter.ViewHolder>() {
+
+    @Inject
+    lateinit var imageLoader: ImageLoader<ImageView>
 
     inner class ViewHolder(private val userBinding: ItemUserBinding) :
         RecyclerView.ViewHolder(userBinding.root), UserItemView {
@@ -23,7 +25,7 @@ class UsersAdapter @Inject constructor(
             userBinding.userLogin.text = login
         }
 
-        override fun setAvatar(url: String) {
+        override fun setUserAvatar(url: String) {
             imageLoader.loadImage(url, userBinding.userImage)
         }
     }
@@ -35,13 +37,13 @@ class UsersAdapter @Inject constructor(
         )
     ).apply {
         itemView.setOnClickListener {
-            presenter.onItemClickListener?.invoke(this)
+            userListPresenter.onItemClickListener?.invoke(this)
         }
     }
 
-    override fun getItemCount(): Int = presenter.getItemsCount()
+    override fun getItemCount(): Int = userListPresenter.getItemsCount()
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        presenter.bindView(holder.apply { pos = position })
+        userListPresenter.bindView(holder.apply { pos = position })
     }
 }

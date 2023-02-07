@@ -4,9 +4,12 @@ import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.volokhinaleksey.popularlibrariesandroid.app.App
+import com.volokhinaleksey.popularlibrariesandroid.repository.ApiHolder
+import com.volokhinaleksey.popularlibrariesandroid.repository.GithubApiHolder
 import com.volokhinaleksey.popularlibrariesandroid.repository.GithubApiService
 import com.volokhinaleksey.popularlibrariesandroid.utils.AndroidNetworkStatus
 import com.volokhinaleksey.popularlibrariesandroid.utils.NetworkStatus
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -18,46 +21,53 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
-class ApiModule {
-
-    @Named("basedUrl")
-    @Provides
-    fun baseUrl(): String = "https://api.github.com/"
+interface ApiModule {
 
     @Singleton
-    @Provides
-    fun client(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient =
-        OkHttpClient.Builder()
-            .addInterceptor(httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY))
-            .build()
+    @Binds
+    fun apiService(impl: GithubApiHolder): ApiHolder
 
-    @Provides
-    @Singleton
-    fun loggingInterceptor(): HttpLoggingInterceptor = HttpLoggingInterceptor()
+    companion object {
 
-    @Singleton
-    @Provides
-    fun gson(): Gson = GsonBuilder()
-        .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-        .excludeFieldsWithoutExposeAnnotation()
-        .create()
+        @Named("basedUrl")
+        @Provides
+        fun baseUrl(): String = "https://api.github.com/"
 
-    @Singleton
-    @Provides
-    fun api(
-        @Named("basedUrl") baseUrl: String,
-        gson: Gson,
-        client: OkHttpClient
-    ): GithubApiService =
-        Retrofit.Builder()
-            .baseUrl(baseUrl)
-            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .client(client)
-            .build()
-            .create(GithubApiService::class.java)
+        @Singleton
+        @Provides
+        fun client(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient =
+            OkHttpClient.Builder()
+                .addInterceptor(httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY))
+                .build()
 
-    @Singleton
-    @Provides
-    fun networkStatus(app: App): NetworkStatus = AndroidNetworkStatus(app)
+        @Provides
+        @Singleton
+        fun loggingInterceptor(): HttpLoggingInterceptor = HttpLoggingInterceptor()
+
+        @Singleton
+        @Provides
+        fun gson(): Gson = GsonBuilder()
+            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+            .excludeFieldsWithoutExposeAnnotation()
+            .create()
+
+        @Singleton
+        @Provides
+        fun api(
+            @Named("basedUrl") baseUrl: String,
+            gson: Gson,
+            client: OkHttpClient
+        ): GithubApiService =
+            Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client)
+                .build()
+                .create(GithubApiService::class.java)
+
+        @Singleton
+        @Provides
+        fun networkStatus(app: App): NetworkStatus = AndroidNetworkStatus(app)
+    }
 }

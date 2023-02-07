@@ -9,8 +9,9 @@ import javax.inject.Inject
  * A class with business logic. This class is responsible for opening the start screen with a list of users
  */
 
-class MainPresenter @Inject constructor(private val router: Router, private val screens: IScreens) :
-    MvpPresenter<MainView>() {
+class MainPresenter @Inject constructor(
+    private val router: Router, private val screens: IScreens
+) : MvpPresenter<MainView>() {
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()

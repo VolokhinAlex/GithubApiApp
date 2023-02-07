@@ -3,16 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/primary_margin"
-    android:layout_marginEnd="@dimen/primary_margin"
-    android:layout_marginBottom="@dimen/primary_margin"
+    android:layout_marginTop="5dp"
+    android:layout_marginStart="@dimen/primary_size"
+    android:layout_marginEnd="@dimen/primary_size"
+    android:layout_marginBottom="5dp"
     android:foreground="?attr/selectableItemBackground"
-    app:cardCornerRadius="@dimen/primary_margin">
+    app:cardCornerRadius="@dimen/primary_size"
+    app:cardElevation="5dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/primary_margin"
+        android:layout_margin="@dimen/primary_size"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 

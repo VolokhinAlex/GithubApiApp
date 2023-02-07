@@ -17,7 +17,7 @@ interface GithubApiService {
      */
 
     @GET("/users")
-    fun getUsers(): Single<List<GithubUserDTO>>
+    fun getUsersData(): Single<List<GithubUserDTO>>
 
     /**
      * Method for getting a list of user's repositories from the Github site
@@ -31,5 +31,5 @@ interface GithubApiService {
      */
 
     @GET
-    fun getUser(@Url userUrl: String): Single<GithubUserDTO>
+    fun getUserData(@Url userUrl: String): Single<GithubUserDTO>
 }

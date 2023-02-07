@@ -5,10 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.volokhinaleksey.popularlibrariesandroid.databinding.ItemRepoBinding
 import com.volokhinaleksey.popularlibrariesandroid.ui.items.IUserReposListPresenter
-import javax.inject.Inject
 
-class ReposAdapter @Inject constructor(
-    private val presenter: IUserReposListPresenter
+class ReposAdapter(
+    private val reposListPresenter: IUserReposListPresenter
 ) : RecyclerView.Adapter<ReposAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
@@ -18,14 +17,14 @@ class ReposAdapter @Inject constructor(
             )
         ).apply {
             itemView.setOnClickListener {
-                presenter.onItemClickListener?.invoke(this)
+                reposListPresenter.onItemClickListener?.invoke(this)
             }
         }
 
-    override fun getItemCount(): Int = presenter.getItemsCount()
+    override fun getItemCount(): Int = reposListPresenter.getItemsCount()
 
     override fun onBindViewHolder(holder: ReposAdapter.ViewHolder, position: Int) {
-        presenter.bindView(holder.apply { pos = position })
+        reposListPresenter.bindView(holder.apply { pos = position })
     }
 
     inner class ViewHolder(private val userBinding: ItemRepoBinding) :
