@@ -64,6 +64,7 @@ class UsersPresenter @Inject constructor(
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
+        viewState.loadingState()
         viewState.init()
         loadData()
         usersListPresenter.onItemClickListener = {
@@ -82,8 +83,10 @@ class UsersPresenter @Inject constructor(
                 .subscribe({ user ->
                     usersListPresenter.users.clear()
                     usersListPresenter.users.addAll(user)
+                    viewState.successState()
                     viewState.updateList()
                 }, { error ->
+                    viewState.errorState(error.message.orEmpty())
                     Timber.e("$SERVER_ERROR: $error")
                 })
         )

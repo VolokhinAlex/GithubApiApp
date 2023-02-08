@@ -15,8 +15,8 @@ import dagger.Subcomponent
 )
 interface UserSubcomponent {
 
-    fun inject(userPresenter: UserPresenter)
-    fun inject(userFragment: UserFragment)
+    fun injectUserPresenter(userPresenter: UserPresenter)
+    fun injectUserFragment(userFragment: UserFragment)
     fun injectRepoDetailsPresenter(reposDetailsPresenter: RepoDetailsPresenter)
 
 }

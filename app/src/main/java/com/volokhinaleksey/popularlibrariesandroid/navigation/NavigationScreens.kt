@@ -22,17 +22,17 @@ class NavigationScreens : IScreens {
 
     /**
      * Details screen about a specific user [UserFragment]
-     * @param data - Data class with user information
+     * @param githubUserDTO - Data class with user information
      */
 
-    override fun userDetailScreen(data: GithubUserDTO): Screen =
-        FragmentScreen { UserFragment.newInstance(data) }
+    override fun userDetailScreen(githubUserDTO: GithubUserDTO): Screen =
+        FragmentScreen { UserFragment.newInstance(arg = githubUserDTO) }
 
     /**
      * User Repository Information Screen [RepoDetailsFragment]
-     * @param data - Data class with repository information
+     * @param githubRepositoryDTO - Data class with repository information
      */
 
-    override fun repoDetailsScreen(data: GithubRepositoryDTO): Screen =
-        FragmentScreen { RepoDetailsFragment.newInstance(data) }
+    override fun repoDetailsScreen(githubRepositoryDTO: GithubRepositoryDTO): Screen =
+        FragmentScreen { RepoDetailsFragment.newInstance(arg = githubRepositoryDTO) }
 }
