@@ -6,7 +6,6 @@ import com.volokhinaleksey.popularlibrariesandroid.di.components.AppComponent
 import com.volokhinaleksey.popularlibrariesandroid.di.components.DaggerAppComponent
 import com.volokhinaleksey.popularlibrariesandroid.di.components.UserSubcomponent
 import com.volokhinaleksey.popularlibrariesandroid.di.components.UsersSubcomponent
-import com.volokhinaleksey.popularlibrariesandroid.di.modules.AppModule
 import com.volokhinaleksey.popularlibrariesandroid.di.scopes.UserScopeContainer
 import com.volokhinaleksey.popularlibrariesandroid.di.scopes.UsersScopeContainer
 import timber.log.Timber
@@ -28,7 +27,8 @@ class App : Application(), UserScopeContainer, UsersScopeContainer {
     override fun onCreate() {
         super.onCreate()
         appInstance = this
-        _appComponent = DaggerAppComponent.builder().appModule(AppModule(this)).build()
+        _appComponent = DaggerAppComponent.builder().application(this).build()
+
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
