@@ -25,6 +25,7 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
 
     private var _binding: FragmentUserBinding? = null
     private val binding get() = _binding!!
+
     private val userData: GithubUserDTO? by lazy { arguments?.parcelable() }
 
     @Inject
@@ -33,10 +34,8 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
     private var _userSubcomponent: UserSubcomponent? = null
 
     private val userPresenter by moxyPresenter {
-        UserPresenter(githubUser = userData).apply {
-            _userSubcomponent = App.appInstance.initUserSubcomponent()
-            _userSubcomponent?.injectUserPresenter(userPresenter = this)
-        }
+        _userSubcomponent = App.appInstance.initUserSubcomponent()
+        _userSubcomponent!!.userPresenterFactory.create(githubUser = userData)
     }
 
     private val reposAdapter: ReposAdapter by lazy {
@@ -92,7 +91,9 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
         binding.following.text = following.toString()
         binding.publicRepos.text = publicRepos.toString()
         binding.publicGists.text = publicGists.toString()
-        githubUser.avatarUrl?.let { imageLoader.loadImage(url = it, target = binding.userImage) }
+        githubUser.avatarUrl?.let {
+            imageLoader.loadImage(url = it, target = binding.userImage)
+        }
     }
 
     /**
@@ -123,5 +124,5 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
         binding.errorMessage.text = message
     }
 
-    override fun backPressed(): Boolean = userPresenter.backPressed()
+    override fun onBackPressed(): Boolean = userPresenter.backPressed()
 }

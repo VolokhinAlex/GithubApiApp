@@ -19,16 +19,16 @@ import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 
 class RepoDetailsFragment : MvpAppCompatFragment(), RepoDetailsView, BackButtonListener {
+
     private val detailsRepoData: GithubRepositoryDTO? by lazy {
         arguments?.parcelable()
     }
+
     private var _binding: FragmentRepoDetailsBinding? = null
     private val binding get() = _binding!!
 
     private val detailsPresenter by moxyPresenter {
-        RepoDetailsPresenter(repositoryData = detailsRepoData).apply {
-            App.appInstance.userSubcomponent?.injectRepoDetailsPresenter(this)
-        }
+        App.appInstance.userSubcomponent?.repoDetailsPresenterFactory!!.create(githubRepositoryDTO = detailsRepoData)
     }
 
     private val commitsAdapter: CommitsAdapter by lazy {
@@ -50,16 +50,16 @@ class RepoDetailsFragment : MvpAppCompatFragment(), RepoDetailsView, BackButtonL
 
     companion object : FragmentInitializer<GithubRepositoryDTO>
 
-    override fun backPressed(): Boolean = detailsPresenter.backPressed()
+    override fun onBackPressed(): Boolean = detailsPresenter.backPressed()
     override fun setRepoName(repoName: String) {
         binding.repoName.text = repoName
     }
 
-    override fun setForkCount(forksCount: String) {
+    override fun setForksCount(forksCount: String) {
         binding.forkCount.text = forksCount
     }
 
-    override fun repoUrl(repoUrl: String) {
+    override fun setRepoUrl(repoUrl: String) {
         binding.openInBrowser.setOnClickListener {
             val openRepository = Intent(Intent.ACTION_VIEW, Uri.parse(repoUrl))
             startActivity(openRepository)

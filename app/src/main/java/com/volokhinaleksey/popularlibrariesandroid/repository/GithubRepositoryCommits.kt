@@ -9,30 +9,30 @@ import javax.inject.Inject
 
 interface GithubRepositoryCommits {
 
-    fun getRepositoryCommits(repositoryData: GithubRepositoryDTO): Single<List<GithubCommitsDTO>>
+    fun getRepositoryCommits(githubRepository: GithubRepositoryDTO): Single<List<GithubCommitsDTO>>
 
 }
 
 class GithubRepositoryCommitsImpl @Inject constructor(
     private val remoteApiSource: ApiHolder,
     private val networkStatus: NetworkStatus,
-    private val repoCache: CommitsCache
+    private val commitsCache: CommitsCache
 ) : GithubRepositoryCommits {
 
-    override fun getRepositoryCommits(repositoryData: GithubRepositoryDTO): Single<List<GithubCommitsDTO>> =
+    override fun getRepositoryCommits(githubRepository: GithubRepositoryDTO): Single<List<GithubCommitsDTO>> =
         networkStatus.isNetworkAvailableSingle().flatMap { isAvailable ->
             if (isAvailable) {
-                repositoryData.commitsUrl?.let {
-                    remoteApiSource.apiService.getUserReposCommits(it.substring(0, it.indexOf("{")))
+                githubRepository.commitsUrl?.let {
+                    remoteApiSource.apiService.getRepoCommits(it.substring(0, it.indexOf("{")))
                         .flatMap { commits ->
-                            repoCache.cacheRepoCommitToDatabase(
+                            commitsCache.cacheRepoCommitsToDatabase(
                                 commits = commits,
-                                repository = repositoryData
+                                repository = githubRepository
                             )
                         }
-                } ?: error("")
+                } ?: error("The repo has not commits yet")
             } else {
-                repoCache.getCommitsDataFromDatabase(repositoryData.id ?: 0)
+                commitsCache.getCommitsDataFromDatabase(githubRepository.id ?: 0)
             }
         }.subscribeOn(Schedulers.io())
 

@@ -21,11 +21,11 @@ interface UserModule {
 
     @UserScope
     @Binds
-    fun userRepoCommitsCache(implCache: GithubRepoCommits): CommitsCache
+    fun userRepoCommitsCache(commitsCacheImpl: GithubRepoCommits): CommitsCache
 
     @UserScope
     @Binds
-    fun userRepoCommits(repositoryImpl: GithubRepositoryCommitsImpl): GithubRepositoryCommits
+    fun userRepoCommits(repositoryCommitsImpl: GithubRepositoryCommitsImpl): GithubRepositoryCommits
 
     companion object {
         @UserScope

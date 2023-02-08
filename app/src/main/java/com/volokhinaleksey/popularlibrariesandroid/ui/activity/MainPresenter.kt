@@ -10,7 +10,8 @@ import javax.inject.Inject
  */
 
 class MainPresenter @Inject constructor(
-    private val router: Router, private val screens: IScreens
+    private val router: Router,
+    private val screens: IScreens
 ) : MvpPresenter<MainView>() {
 
     override fun onFirstViewAttach() {

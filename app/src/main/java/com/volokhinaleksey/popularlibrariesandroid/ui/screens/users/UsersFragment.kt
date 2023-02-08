@@ -92,5 +92,5 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
         fun newInstance() = UsersFragment()
     }
 
-    override fun backPressed(): Boolean = usersPresenter.backPressed()
+    override fun onBackPressed(): Boolean = usersPresenter.backPressed()
 }

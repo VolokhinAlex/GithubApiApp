@@ -14,7 +14,7 @@ class UsersAdapter(
 ) : RecyclerView.Adapter<UsersAdapter.ViewHolder>() {
 
     @Inject
-    lateinit var imageLoader: ImageLoader<ImageView>
+    lateinit var imageLoader: dagger.Lazy<ImageLoader<ImageView>>
 
     inner class ViewHolder(private val userBinding: ItemUserBinding) :
         RecyclerView.ViewHolder(userBinding.root), UserItemView {
@@ -26,7 +26,7 @@ class UsersAdapter(
         }
 
         override fun setUserAvatar(url: String) {
-            imageLoader.loadImage(url, userBinding.userImage)
+            imageLoader.get().loadImage(url, userBinding.userImage)
         }
     }
 

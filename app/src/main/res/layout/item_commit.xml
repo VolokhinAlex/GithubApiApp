@@ -15,7 +15,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_margin="@dimen/primary_size"
         android:orientation="vertical">
 
         <TextView
@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/primary_size"
-            android:textSize="20sp"
+            android:textSize="@dimen/commit_tv_primary_size"
             tools:text="Name"/>
 
         <TextView
@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/primary_size"
-            android:textSize="20sp"
+            android:textSize="@dimen/commit_tv_primary_size"
             tools:text="Email"/>
 
         <TextView
@@ -39,7 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/primary_size"
-            android:textSize="20sp"
+            android:textSize="@dimen/commit_tv_primary_size"
             tools:text="Message"/>
 
         <TextView
@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/primary_size"
-            android:textSize="16sp"
+            android:textSize="@dimen/commit_date"
             tools:text="Date"/>
 
     </LinearLayout>

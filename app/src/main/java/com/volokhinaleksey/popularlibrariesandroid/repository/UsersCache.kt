@@ -67,7 +67,7 @@ class RoomGithubUsersCacheImpl @Inject constructor(
 
     override fun getUsersDataFromDatabase(): Single<List<GithubUserDTO>> =
         Single.fromCallable {
-            localDatabase.userDao.getAll().map { roomGithubUser ->
+            localDatabase.userDao.getAllUsers().map { roomGithubUser ->
                 mapToGithubUser(roomGithubUser = roomGithubUser)
             }
         }
