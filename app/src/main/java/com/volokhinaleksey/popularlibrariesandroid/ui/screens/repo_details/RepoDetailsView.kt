@@ -1,5 +1,6 @@
 package com.volokhinaleksey.popularlibrariesandroid.ui.screens.repo_details
 
+import com.volokhinaleksey.popularlibrariesandroid.ui.base_ui.BaseView
 import moxy.MvpView
 import moxy.viewstate.strategy.alias.AddToEndSingle
 
@@ -8,7 +9,7 @@ import moxy.viewstate.strategy.alias.AddToEndSingle
  */
 
 @AddToEndSingle
-interface RepoDetailsView : MvpView {
+interface RepoDetailsView : MvpView, BaseView {
 
     /**
      * The method for setting the repository name in the UI element.

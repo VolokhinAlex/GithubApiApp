@@ -1,11 +1,8 @@
 package com.volokhinaleksey.popularlibrariesandroid.utils
 
-import com.volokhinaleksey.popularlibrariesandroid.model.GithubRepositoryDTO
-import com.volokhinaleksey.popularlibrariesandroid.model.GithubUserDTO
-import com.volokhinaleksey.popularlibrariesandroid.model.RoomGithubUser
-import com.volokhinaleksey.popularlibrariesandroid.model.RoomGithubUserRepo
+import com.volokhinaleksey.popularlibrariesandroid.model.*
 
-fun convertGithubUserToRoomGithubUser(githubUser: GithubUserDTO): RoomGithubUser =
+fun mapToRoomGithubUser(githubUser: GithubUserDTO): RoomGithubUser =
     RoomGithubUser(
         id = githubUser.id,
         login = githubUser.login,
@@ -18,11 +15,11 @@ fun convertGithubUserToRoomGithubUser(githubUser: GithubUserDTO): RoomGithubUser
         company = githubUser.company,
         blog = githubUser.blog,
         location = githubUser.location,
-        url =  githubUser.url,
+        url = githubUser.url,
         reposUrl = githubUser.reposUrl
     )
 
-fun convertRoomGithubUserToGithubUser(roomGithubUser: RoomGithubUser): GithubUserDTO =
+fun mapToGithubUser(roomGithubUser: RoomGithubUser): GithubUserDTO =
     GithubUserDTO(
         login = roomGithubUser.login,
         id = roomGithubUser.id,
@@ -35,12 +32,12 @@ fun convertRoomGithubUserToGithubUser(roomGithubUser: RoomGithubUser): GithubUse
         company = roomGithubUser.company,
         blog = roomGithubUser.blog,
         location = roomGithubUser.location,
-        url =  roomGithubUser.url,
+        url = roomGithubUser.url,
         reposUrl = roomGithubUser.reposUrl
     )
 
 
-fun convertGithubRepositoryToRoomGithubUserRepo(
+fun mapToRoomGithubUserRepo(
     githubRepo: GithubRepositoryDTO,
     userId: Long?
 ): RoomGithubUserRepo =
@@ -54,12 +51,34 @@ fun convertGithubRepositoryToRoomGithubUserRepo(
         createdAt = githubRepo.createdAt
     )
 
-fun convertRoomGithubUserRepoToGithubRepository(roomGithubRepo: RoomGithubUserRepo): GithubRepositoryDTO =
+fun mapToGithubRepository(roomGithubRepo: RoomGithubUserRepo): GithubRepositoryDTO =
     GithubRepositoryDTO(
         id = roomGithubRepo.id,
         name = roomGithubRepo.name,
         htmlUrl = roomGithubRepo.htmlUrl,
         fork = roomGithubRepo.fork,
         createdAt = roomGithubRepo.createdAt,
-        forks = roomGithubRepo.forksCount
+        forks = roomGithubRepo.forksCount,
+        commitsUrl = ""
     )
+
+fun mapToRoomGithubRepoCommits(githubRepoCommits: GithubCommitsDTO, repoId: Long) =
+    RoomGithubRepoCommits(
+        sha = githubRepoCommits.sha.orEmpty(),
+        commitMessage = githubRepoCommits.commit?.message.orEmpty(),
+        committerName = githubRepoCommits.commit?.committer?.name.orEmpty(),
+        committerEmail = githubRepoCommits.commit?.committer?.email.orEmpty(),
+        commitDate = githubRepoCommits.commit?.committer?.date.orEmpty(),
+        repositoryId = repoId
+    )
+
+fun mapToGithubCommitsDTO(githubRepoCommits: RoomGithubRepoCommits) = GithubCommitsDTO(
+    sha = githubRepoCommits.sha,
+    commit = CommitDTO(
+        committer = CommitterDTO(
+            name = githubRepoCommits.committerName,
+            email = githubRepoCommits.committerEmail,
+            date = githubRepoCommits.committerEmail
+        ), message = githubRepoCommits.commitMessage
+    )
+)

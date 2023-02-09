@@ -1,5 +1,6 @@
 package com.volokhinaleksey.popularlibrariesandroid.repository
 
+import com.volokhinaleksey.popularlibrariesandroid.model.GithubCommitsDTO
 import com.volokhinaleksey.popularlibrariesandroid.model.GithubRepositoryDTO
 import com.volokhinaleksey.popularlibrariesandroid.model.GithubUserDTO
 import io.reactivex.rxjava3.core.Single
@@ -32,4 +33,7 @@ interface GithubApiService {
 
     @GET
     fun getUserData(@Url userUrl: String): Single<GithubUserDTO>
+
+    @GET
+    fun getUserReposCommits(@Url commitsUrl: String): Single<List<GithubCommitsDTO>>
 }

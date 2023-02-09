@@ -7,8 +7,6 @@ import com.volokhinaleksey.popularlibrariesandroid.repository.GithubUsersReposit
 import com.volokhinaleksey.popularlibrariesandroid.repository.GithubUsersRepositoryImpl
 import com.volokhinaleksey.popularlibrariesandroid.repository.RoomGithubUsersCacheImpl
 import com.volokhinaleksey.popularlibrariesandroid.repository.UsersCache
-import com.volokhinaleksey.popularlibrariesandroid.ui.items.IUserListPresenter
-import com.volokhinaleksey.popularlibrariesandroid.ui.screens.users.UsersPresenter
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -18,11 +16,11 @@ interface UsersModule {
 
     @UsersScope
     @Binds
-    fun usersCache(impl: RoomGithubUsersCacheImpl): UsersCache
+    fun usersCache(usersCacheImpl: RoomGithubUsersCacheImpl): UsersCache
 
     @UsersScope
     @Binds
-    fun usersRepository(impl: GithubUsersRepositoryImpl): GithubUsersRepository
+    fun usersRepository(usersRepositoryImpl: GithubUsersRepositoryImpl): GithubUsersRepository
 
     companion object {
         @UsersScope

@@ -7,4 +7,5 @@
     <string name="gists">Gists</string>
     <string name="following">Following:</string>
     <string name="followers">Followers:</string>
+    <string name="commits">Commits:</string>
 </resources>

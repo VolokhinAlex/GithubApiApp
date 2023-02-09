@@ -26,7 +26,7 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
         usersSubcomponent!!.injectUsersPresenter()
     }
     private val usersListAdapter by lazy {
-        UsersAdapter(usersPresenter.usersListPresenter).apply {
+        UsersAdapter(userListPresenter = usersPresenter.usersListPresenter).apply {
             App.appInstance.usersSubcomponent?.injectUsersAdapter(usersAdapter = this)
         }
     }

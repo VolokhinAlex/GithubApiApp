@@ -3,10 +3,10 @@ package com.volokhinaleksey.popularlibrariesandroid.repository
 import com.volokhinaleksey.popularlibrariesandroid.model.GithubRepositoryDTO
 import com.volokhinaleksey.popularlibrariesandroid.model.GithubUserDTO
 import com.volokhinaleksey.popularlibrariesandroid.room.GithubRoomDatabase
-import com.volokhinaleksey.popularlibrariesandroid.utils.convertGithubRepositoryToRoomGithubUserRepo
-import com.volokhinaleksey.popularlibrariesandroid.utils.convertGithubUserToRoomGithubUser
-import com.volokhinaleksey.popularlibrariesandroid.utils.convertRoomGithubUserRepoToGithubRepository
-import com.volokhinaleksey.popularlibrariesandroid.utils.convertRoomGithubUserToGithubUser
+import com.volokhinaleksey.popularlibrariesandroid.utils.mapToRoomGithubUserRepo
+import com.volokhinaleksey.popularlibrariesandroid.utils.mapToRoomGithubUser
+import com.volokhinaleksey.popularlibrariesandroid.utils.mapToGithubRepository
+import com.volokhinaleksey.popularlibrariesandroid.utils.mapToGithubUser
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
@@ -86,7 +86,7 @@ class RoomUserCacheImpl
         userDTO.login?.let {
             val roomUser = localDatabase.userDao.getUserByLogin(it)
             val roomRepos = repositories.map { user ->
-                convertGithubRepositoryToRoomGithubUserRepo(
+                mapToRoomGithubUserRepo(
                     githubRepo = user,
                     userId = roomUser?.id
                 )
@@ -109,7 +109,7 @@ class RoomUserCacheImpl
             val roomUser = user.login?.let { localDatabase.userDao.getUserByLogin(it) }
             localDatabase.repositoryDao.getRepositoriesByUserId(userId = roomUser?.id.toString())
                 .map { roomGithubUser ->
-                    convertRoomGithubUserRepoToGithubRepository(roomGithubRepo = roomGithubUser)
+                    mapToGithubRepository(roomGithubRepo = roomGithubUser)
                 }
         }
 
@@ -125,7 +125,7 @@ class RoomUserCacheImpl
     override fun cacheUserToDatabase(
         githubUser: GithubUserDTO,
     ): Single<GithubUserDTO> = Single.fromCallable {
-        val roomUsers = convertGithubUserToRoomGithubUser(githubUser = githubUser)
+        val roomUsers = mapToRoomGithubUser(githubUser = githubUser)
         localDatabase.userDao.upsert(roomUsers)
         githubUser
     }
@@ -141,7 +141,7 @@ class RoomUserCacheImpl
     override fun getUserDataFromDatabase(user: GithubUserDTO): Single<GithubUserDTO> =
         Single.fromCallable {
             localDatabase.userDao.getUserByLogin(user.login.orEmpty())
-                ?.let { convertRoomGithubUserToGithubUser(roomGithubUser = it) }
+                ?.let { mapToGithubUser(roomGithubUser = it) }
         }
 
 }

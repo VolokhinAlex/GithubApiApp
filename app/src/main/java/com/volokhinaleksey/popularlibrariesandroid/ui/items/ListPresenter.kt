@@ -1,7 +1,9 @@
 package com.volokhinaleksey.popularlibrariesandroid.ui.items
 
+import com.volokhinaleksey.popularlibrariesandroid.model.GithubCommitsDTO
 import com.volokhinaleksey.popularlibrariesandroid.model.GithubRepositoryDTO
 import com.volokhinaleksey.popularlibrariesandroid.model.GithubUserDTO
+import com.volokhinaleksey.popularlibrariesandroid.ui.screens.repo_details.adapter.CommitsItemView
 import com.volokhinaleksey.popularlibrariesandroid.ui.screens.user.adapter.RepoItemView
 import com.volokhinaleksey.popularlibrariesandroid.ui.screens.users.adapter.UserItemView
 
@@ -31,3 +33,6 @@ interface IUserReposListPresenter : IListPresenter<RepoItemView> {
     val repos: MutableList<GithubRepositoryDTO>
 }
 
+interface IUserRepoCommitsListPresenter : IListPresenter<CommitsItemView> {
+    val commits: MutableList<GithubCommitsDTO>
+}
