@@ -31,7 +31,7 @@ interface GithubUsersRepository {
 class GithubUsersRepositoryImpl @Inject constructor(
     private val remoteApiSource: ApiHolder,
     private val networkStatus: NetworkStatus,
-    private val cacheUsers: UsersCache,
+    private val usersCache: UsersCache,
 ) : GithubUsersRepository {
 
     /**
@@ -46,10 +46,10 @@ class GithubUsersRepositoryImpl @Inject constructor(
         networkStatus.isNetworkAvailableSingle().flatMap { isAvailable ->
             if (isAvailable) {
                 remoteApiSource.apiService.getUsersData().flatMap { users ->
-                    cacheUsers.cacheUsersToDatabase(users)
+                    usersCache.cacheUsersToDatabase(users = users)
                 }
             } else {
-                cacheUsers.getUsersDataFromDatabase()
+                usersCache.getUsersDataFromDatabase()
             }
         }.subscribeOn(Schedulers.io())
 }

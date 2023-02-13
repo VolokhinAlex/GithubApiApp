@@ -10,19 +10,20 @@ import javax.inject.Inject
 
 interface CommitsCache {
 
-    fun cacheRepoCommitToDatabase(
+    fun cacheRepoCommitsToDatabase(
         commits: List<GithubCommitsDTO>,
         repository: GithubRepositoryDTO
     ): Single<List<GithubCommitsDTO>>
 
     fun getCommitsDataFromDatabase(repoId: Long): Single<List<GithubCommitsDTO>>
+
 }
 
 class GithubRepoCommits @Inject constructor(
     private val localDatabase: GithubRoomDatabase
 ) : CommitsCache {
 
-    override fun cacheRepoCommitToDatabase(
+    override fun cacheRepoCommitsToDatabase(
         commits: List<GithubCommitsDTO>,
         repository: GithubRepositoryDTO
     ): Single<List<GithubCommitsDTO>> =

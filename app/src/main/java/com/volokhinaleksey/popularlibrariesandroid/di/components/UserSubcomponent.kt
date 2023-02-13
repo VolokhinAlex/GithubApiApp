@@ -15,8 +15,10 @@ import dagger.Subcomponent
 )
 interface UserSubcomponent {
 
+    val userPresenterFactory: UserPresenter.Factory
+    val repoDetailsPresenterFactory: RepoDetailsPresenter.Factory
+
     fun injectUserPresenter(userPresenter: UserPresenter)
     fun injectUserFragment(userFragment: UserFragment)
-    fun injectRepoDetailsPresenter(reposDetailsPresenter: RepoDetailsPresenter)
 
 }

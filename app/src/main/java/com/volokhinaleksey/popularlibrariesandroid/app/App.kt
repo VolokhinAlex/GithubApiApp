@@ -1,6 +1,7 @@
 package com.volokhinaleksey.popularlibrariesandroid.app
 
 import android.app.Application
+import com.volokhinaleksey.popularlibrariesandroid.BuildConfig
 import com.volokhinaleksey.popularlibrariesandroid.di.components.AppComponent
 import com.volokhinaleksey.popularlibrariesandroid.di.components.DaggerAppComponent
 import com.volokhinaleksey.popularlibrariesandroid.di.components.UserSubcomponent
@@ -12,7 +13,12 @@ import timber.log.Timber
 
 class App : Application(), UserScopeContainer, UsersScopeContainer {
 
-    lateinit var appComponent: AppComponent
+    private var _appComponent: AppComponent? = null
+    internal val appComponent: AppComponent
+        get() = checkNotNull(_appComponent) {
+            "AppComponent is not initialized"
+        }
+
     var usersSubcomponent: UsersSubcomponent? = null
         private set
 
@@ -22,8 +28,10 @@ class App : Application(), UserScopeContainer, UsersScopeContainer {
     override fun onCreate() {
         super.onCreate()
         appInstance = this
-        appComponent = DaggerAppComponent.builder().appModule(AppModule(this)).build()
-        Timber.plant(Timber.DebugTree())
+        _appComponent = DaggerAppComponent.builder().appModule(AppModule(this)).build()
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        }
     }
 
     companion object {

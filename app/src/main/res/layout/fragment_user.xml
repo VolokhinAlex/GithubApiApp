@@ -14,8 +14,8 @@
 
         <ImageView
             android:id="@+id/user_image"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="@dimen/img_avatar_size"
+            android:layout_height="@dimen/img_avatar_size"
             android:layout_gravity="center_horizontal"
             android:contentDescription="@string/user_image"
             android:scaleType="centerInside" />
@@ -27,7 +27,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/primary_size"
             android:layout_marginBottom="@dimen/primary_size"
-            android:textSize="30sp"
+            android:textSize="@dimen/user_title_size"
             tools:text="User 1" />
 
         <TextView
@@ -150,7 +150,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:textSize="30sp"
+        android:textSize="@dimen/error_title"
         android:visibility="gone"
         tools:text="Error" />
 

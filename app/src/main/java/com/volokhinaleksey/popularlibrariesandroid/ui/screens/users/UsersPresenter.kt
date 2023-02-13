@@ -66,7 +66,7 @@ class UsersPresenter @Inject constructor(
         super.onFirstViewAttach()
         viewState.loadingState()
         viewState.init()
-        loadData()
+        loadUsersData()
         usersListPresenter.onItemClickListener = {
             router.navigateTo(screens.userDetailScreen(usersListPresenter.users[it.pos]))
         }
@@ -76,9 +76,10 @@ class UsersPresenter @Inject constructor(
      * Method for getting data from the repository
      */
 
-    private fun loadData() {
+    private fun loadUsersData() {
         compositeDisposable.add(
             usersRepository.getUsers()
+                .repeat(5)
                 .observeOn(uiScheduler)
                 .subscribe({ user ->
                     usersListPresenter.users.clear()
@@ -100,5 +101,6 @@ class UsersPresenter @Inject constructor(
     override fun onDestroy() {
         super.onDestroy()
         usersScopeContainer.releaseUsersScope()
+        compositeDisposable.clear()
     }
 }

@@ -12,13 +12,13 @@ interface UserDao {
     fun upsert(user: RoomGithubUser)
 
     @Upsert
-    fun upsert(user: List<RoomGithubUser>)
+    fun upsert(users: List<RoomGithubUser>)
 
     @Delete
     fun delete(user: RoomGithubUser)
 
     @Query("SELECT * FROM github_user")
-    fun getAll(): List<RoomGithubUser>
+    fun getAllUsers(): List<RoomGithubUser>
 
     @Query("SELECT * FROM github_user WHERE login = :login LIMIT 1")
     fun getUserByLogin(login: String): RoomGithubUser?

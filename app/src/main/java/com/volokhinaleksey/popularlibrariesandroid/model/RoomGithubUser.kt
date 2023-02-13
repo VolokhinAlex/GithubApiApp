@@ -25,7 +25,8 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "github_user")
 data class RoomGithubUser(
-    @PrimaryKey val id: Long?,
+    @PrimaryKey
+    val id: Long?,
     val login: String?,
     @ColumnInfo(name = "avatar_url")
     val avatarUrl: String?,

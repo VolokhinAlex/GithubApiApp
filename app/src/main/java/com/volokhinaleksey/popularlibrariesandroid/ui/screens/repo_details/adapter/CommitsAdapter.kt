@@ -31,6 +31,8 @@ class CommitsAdapter(
     inner class ViewHolder(private val commitBinding: ItemCommitBinding) :
         RecyclerView.ViewHolder(commitBinding.root), CommitsItemView {
 
+        override var pos: Int = -1
+
         override fun setCommitterName(committerName: String) {
             commitBinding.committerName.text = committerName
         }
@@ -46,7 +48,5 @@ class CommitsAdapter(
         override fun setCommitMessage(message: String) {
             commitBinding.commitMessage.text = message
         }
-
-        override var pos: Int = -1
     }
 }

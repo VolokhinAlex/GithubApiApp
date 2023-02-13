@@ -6,31 +6,19 @@ import com.volokhinaleksey.popularlibrariesandroid.model.GithubRepositoryDTO
 import com.volokhinaleksey.popularlibrariesandroid.repository.GithubRepositoryCommits
 import com.volokhinaleksey.popularlibrariesandroid.ui.items.IUserRepoCommitsListPresenter
 import com.volokhinaleksey.popularlibrariesandroid.ui.screens.repo_details.adapter.CommitsItemView
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.schedulers.Schedulers
 import moxy.MvpPresenter
-import javax.inject.Inject
 
-class RepoDetailsPresenter(
-    private val repositoryData: GithubRepositoryDTO?
+class RepoDetailsPresenter @AssistedInject constructor(
+    @Assisted("githubRepositoryDTO") private val githubRepositoryDTO: GithubRepositoryDTO?,
+    private val router: Router,
+    private val repositoryCommits: GithubRepositoryCommits,
+    private val uiScheduler: Scheduler
 ) : MvpPresenter<RepoDetailsView>() {
-
-    @Inject
-    lateinit var router: Router
-
-    @Inject
-    lateinit var repository: GithubRepositoryCommits
-
-    @Inject
-    lateinit var uiScheduler: Scheduler
-
-    override fun onFirstViewAttach() {
-        super.onFirstViewAttach()
-        viewState.loadingState()
-        viewState.init()
-        repoDataLoad()
-    }
 
     val userRepoCommitsListPresenter: IUserRepoCommitsListPresenter = UserRepoCommitsListPresenter()
 
@@ -70,21 +58,34 @@ class RepoDetailsPresenter(
     }
 
     /**
+     * Callback after the first presenter init and view binding.
+     * If this presenter instance will have to attach more views in the future, this method will not be called.
+     */
+
+    override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
+        viewState.loadingState()
+        viewState.init()
+        detailsRepositoryDataLoad()
+    }
+
+    /**
      * Method for loading data
      */
 
-    private fun repoDataLoad() {
-        repositoryData?.apply {
+    private fun detailsRepositoryDataLoad() {
+        githubRepositoryDTO?.apply {
             viewState.setRepoName(repoName = name.orEmpty())
-            viewState.setForkCount(forksCount = forks.toString())
-            viewState.repoUrl(repoUrl = htmlUrl.orEmpty())
-            loadCommits(repositoryData = this)
+            viewState.setForksCount(forksCount = forks.toString())
+            viewState.setRepoUrl(repoUrl = htmlUrl.orEmpty())
+            repositoryCommitsLoad(repositoryData = this)
         }
     }
 
-    private fun loadCommits(repositoryData: GithubRepositoryDTO) {
+    private fun repositoryCommitsLoad(repositoryData: GithubRepositoryDTO) {
         compositeDisposable.add(
-            repository.getRepositoryCommits(repositoryData = repositoryData).observeOn(uiScheduler)
+            repositoryCommits.getRepositoryCommits(githubRepository = repositoryData)
+                .observeOn(uiScheduler)
                 .subscribe({
                     userRepoCommitsListPresenter.commits.clear()
                     userRepoCommitsListPresenter.commits.addAll(it)
@@ -100,6 +101,16 @@ class RepoDetailsPresenter(
     fun backPressed(): Boolean {
         router.exit()
         return true
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        compositeDisposable.clear()
+    }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(@Assisted("githubRepositoryDTO") githubRepositoryDTO: GithubRepositoryDTO?): RepoDetailsPresenter
     }
 
 }

@@ -16,6 +16,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/primary_size"
-        android:textSize="25sp" />
+        android:textSize="@dimen/repo_tv_size" />
 
 </com.google.android.material.card.MaterialCardView>

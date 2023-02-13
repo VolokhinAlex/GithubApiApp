@@ -14,7 +14,7 @@ import javax.inject.Inject
 class MainActivity : MvpAppCompatActivity(), MainView {
 
     @Inject
-    lateinit var navigatorHolder: NavigatorHolder
+    lateinit var navigatorHolder: dagger.Lazy<NavigatorHolder>
 
     private var _binding: ActivityMainBinding? = null
     private val binding: ActivityMainBinding get() = _binding!!
@@ -33,18 +33,18 @@ class MainActivity : MvpAppCompatActivity(), MainView {
 
     override fun onResumeFragments() {
         super.onResumeFragments()
-        navigatorHolder.setNavigator(navigator)
+        navigatorHolder.get().setNavigator(navigator)
     }
 
     override fun onPause() {
         super.onPause()
-        navigatorHolder.removeNavigator()
+        navigatorHolder.get().removeNavigator()
     }
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         supportFragmentManager.fragments.forEach {
-            if (it is BackButtonListener && it.backPressed()) {
+            if (it is BackButtonListener && it.onBackPressed()) {
                 return
             }
         }

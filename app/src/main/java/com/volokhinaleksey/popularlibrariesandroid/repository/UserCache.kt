@@ -3,10 +3,10 @@ package com.volokhinaleksey.popularlibrariesandroid.repository
 import com.volokhinaleksey.popularlibrariesandroid.model.GithubRepositoryDTO
 import com.volokhinaleksey.popularlibrariesandroid.model.GithubUserDTO
 import com.volokhinaleksey.popularlibrariesandroid.room.GithubRoomDatabase
-import com.volokhinaleksey.popularlibrariesandroid.utils.mapToRoomGithubUserRepo
-import com.volokhinaleksey.popularlibrariesandroid.utils.mapToRoomGithubUser
 import com.volokhinaleksey.popularlibrariesandroid.utils.mapToGithubRepository
 import com.volokhinaleksey.popularlibrariesandroid.utils.mapToGithubUser
+import com.volokhinaleksey.popularlibrariesandroid.utils.mapToRoomGithubUser
+import com.volokhinaleksey.popularlibrariesandroid.utils.mapToRoomGithubUserRepo
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
@@ -66,8 +66,9 @@ interface UserCache {
  * @param localDatabase - A local database instance that is automatically injected using dagger
  */
 
-class RoomUserCacheImpl
-@Inject constructor(private val localDatabase: GithubRoomDatabase) : UserCache {
+class RoomUserCacheImpl @Inject constructor(
+    private val localDatabase: GithubRoomDatabase
+) : UserCache {
 
     /**
      * The method gets the user login from the GithubUserDTO data class performs a search in the
@@ -84,14 +85,14 @@ class RoomUserCacheImpl
         userDTO: GithubUserDTO
     ): Single<List<GithubRepositoryDTO>> = Single.fromCallable {
         userDTO.login?.let {
-            val roomUser = localDatabase.userDao.getUserByLogin(it)
+            val roomUser = localDatabase.userDao.getUserByLogin(login = it)
             val roomRepos = repositories.map { user ->
                 mapToRoomGithubUserRepo(
                     githubRepo = user,
                     userId = roomUser?.id
                 )
             }
-            localDatabase.repositoryDao.upsert(roomRepos)
+            localDatabase.repositoryDao.upsert(repos = roomRepos)
         }
         repositories
     }
@@ -106,7 +107,7 @@ class RoomUserCacheImpl
 
     override fun getUserRepositoriesFromDatabase(user: GithubUserDTO): Single<List<GithubRepositoryDTO>> =
         Single.fromCallable {
-            val roomUser = user.login?.let { localDatabase.userDao.getUserByLogin(it) }
+            val roomUser = user.login?.let { localDatabase.userDao.getUserByLogin(login = it) }
             localDatabase.repositoryDao.getRepositoriesByUserId(userId = roomUser?.id.toString())
                 .map { roomGithubUser ->
                     mapToGithubRepository(roomGithubRepo = roomGithubUser)
@@ -125,8 +126,8 @@ class RoomUserCacheImpl
     override fun cacheUserToDatabase(
         githubUser: GithubUserDTO,
     ): Single<GithubUserDTO> = Single.fromCallable {
-        val roomUsers = mapToRoomGithubUser(githubUser = githubUser)
-        localDatabase.userDao.upsert(roomUsers)
+        val roomUser = mapToRoomGithubUser(githubUser = githubUser)
+        localDatabase.userDao.upsert(user = roomUser)
         githubUser
     }
 
@@ -140,7 +141,7 @@ class RoomUserCacheImpl
 
     override fun getUserDataFromDatabase(user: GithubUserDTO): Single<GithubUserDTO> =
         Single.fromCallable {
-            localDatabase.userDao.getUserByLogin(user.login.orEmpty())
+            localDatabase.userDao.getUserByLogin(login = user.login.orEmpty())
                 ?.let { mapToGithubUser(roomGithubUser = it) }
         }
 

@@ -35,5 +35,5 @@ interface GithubApiService {
     fun getUserData(@Url userUrl: String): Single<GithubUserDTO>
 
     @GET
-    fun getUserReposCommits(@Url commitsUrl: String): Single<List<GithubCommitsDTO>>
+    fun getRepoCommits(@Url commitsUrl: String): Single<List<GithubCommitsDTO>>
 }

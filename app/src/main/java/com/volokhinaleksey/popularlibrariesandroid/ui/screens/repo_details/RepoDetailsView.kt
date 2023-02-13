@@ -21,12 +21,12 @@ interface RepoDetailsView : MvpView, BaseView {
      * The method for setting the repository's forks count in the UI element.
      */
 
-    fun setForkCount(forksCount: String)
+    fun setForksCount(forksCount: String)
 
     /**
      * The method sets a link to a repository on the Internet in the UI element.
      */
 
-    fun repoUrl(repoUrl: String)
+    fun setRepoUrl(repoUrl: String)
 
 }

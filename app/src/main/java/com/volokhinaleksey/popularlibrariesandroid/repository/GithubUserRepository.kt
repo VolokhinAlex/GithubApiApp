@@ -52,16 +52,16 @@ class GithubUserRepositoryImpl @Inject constructor(
         networkStatus.isNetworkAvailableSingle().flatMap { isAvailable ->
             if (isAvailable) {
                 user.reposUrl?.let { url ->
-                    remoteApiSource.apiService.getUserRepos(url)
+                    remoteApiSource.apiService.getUserRepos(reposUrl = url)
                         .flatMap { repositories ->
                             userCache.cacheUserRepositoriesToDatabase(
-                                repositories,
-                                user
+                                repositories = repositories,
+                                userDTO = user
                             )
                         }
                 } ?: error("User has no repos url")
             } else {
-                userCache.getUserRepositoriesFromDatabase(user)
+                userCache.getUserRepositoriesFromDatabase(user = user)
             }
         }.subscribeOn(Schedulers.io())
 
@@ -79,10 +79,10 @@ class GithubUserRepositoryImpl @Inject constructor(
         networkStatus.isNetworkAvailableSingle().flatMap { isAvailable ->
             if (isAvailable) {
                 remoteApiSource.apiService.getUserData(user.url.orEmpty()).flatMap { githubUser ->
-                    userCache.cacheUserToDatabase(githubUser)
+                    userCache.cacheUserToDatabase(githubUser = githubUser)
                 }
             } else {
-                userCache.getUserDataFromDatabase(user)
+                userCache.getUserDataFromDatabase(user = user)
             }
         }.subscribeOn(Schedulers.io())
 }

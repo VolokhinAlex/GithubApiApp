@@ -8,34 +8,26 @@ import com.volokhinaleksey.popularlibrariesandroid.navigation.IScreens
 import com.volokhinaleksey.popularlibrariesandroid.repository.GithubUserRepository
 import com.volokhinaleksey.popularlibrariesandroid.ui.items.IUserReposListPresenter
 import com.volokhinaleksey.popularlibrariesandroid.ui.screens.user.adapter.RepoItemView
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import moxy.MvpPresenter
 import timber.log.Timber
-import javax.inject.Inject
 
 private const val SERVER_ERROR = "Server Error"
 
-class UserPresenter(
-    private val githubUser: GithubUserDTO?
+class UserPresenter @AssistedInject constructor(
+    @Assisted("githubUser") private val githubUser: GithubUserDTO?,
+    private val uiScheduler: Scheduler,
+    private val userRepository: GithubUserRepository,
+    private val router: Router,
+    private val screens: IScreens,
+    private val userScopeContainer: UserScopeContainer
 ) : MvpPresenter<UserView>() {
 
-    @Inject
-    lateinit var uiScheduler: Scheduler
-
-    @Inject
-    lateinit var userRepo: GithubUserRepository
-
-    @Inject
-    lateinit var router: Router
-
-    @Inject
-    lateinit var screens: IScreens
-
     val userReposListPresenter: IUserReposListPresenter = UserReposListPresenter()
-
-    @Inject
-    lateinit var userScopeContainer: UserScopeContainer
 
     /**
      * Variable for collecting disposable objects into one
@@ -82,7 +74,7 @@ class UserPresenter(
         viewState.loadingState()
         viewState.init()
         githubUser?.let {
-            getUserInfoByLogin(user = it)
+            loadUserDetailsData(user = it)
             loadUserRepositories(user = it)
         }
         userReposListPresenter.onItemClickListener = {
@@ -95,9 +87,9 @@ class UserPresenter(
      * @param user - A user data.
      */
 
-    private fun getUserInfoByLogin(user: GithubUserDTO) {
+    private fun loadUserDetailsData(user: GithubUserDTO) {
         compositeDisposable.add(
-            userRepo.getUserByLogin(user = user).observeOn(uiScheduler).subscribe({ data ->
+            userRepository.getUserByLogin(user = user).observeOn(uiScheduler).subscribe({ data ->
                 viewState.setUserData(githubUser = data)
             }, {
                 viewState.errorState(message = it.message.orEmpty())
@@ -113,7 +105,7 @@ class UserPresenter(
 
     private fun loadUserRepositories(user: GithubUserDTO) {
         compositeDisposable.add(
-            userRepo.getUserRepos(user).observeOn(uiScheduler).subscribe({ data ->
+            userRepository.getUserRepos(user = user).observeOn(uiScheduler).subscribe({ data ->
                 userReposListPresenter.repos.clear()
                 userReposListPresenter.repos.addAll(data)
                 viewState.successState()
@@ -133,5 +125,10 @@ class UserPresenter(
     override fun onDestroy() {
         super.onDestroy()
         userScopeContainer.releaseUserScope()
+        compositeDisposable.clear()
+    }
+    @AssistedFactory
+    interface Factory {
+        fun create(@Assisted("githubUser") githubUser: GithubUserDTO?): UserPresenter
     }
 }

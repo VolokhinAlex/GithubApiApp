@@ -59,7 +59,7 @@ fun mapToGithubRepository(roomGithubRepo: RoomGithubUserRepo): GithubRepositoryD
         fork = roomGithubRepo.fork,
         createdAt = roomGithubRepo.createdAt,
         forks = roomGithubRepo.forksCount,
-        commitsUrl = ""
+        commitsUrl = null
     )
 
 fun mapToRoomGithubRepoCommits(githubRepoCommits: GithubCommitsDTO, repoId: Long) =
@@ -78,7 +78,7 @@ fun mapToGithubCommitsDTO(githubRepoCommits: RoomGithubRepoCommits) = GithubComm
         committer = CommitterDTO(
             name = githubRepoCommits.committerName,
             email = githubRepoCommits.committerEmail,
-            date = githubRepoCommits.committerEmail
+            date = githubRepoCommits.commitDate
         ), message = githubRepoCommits.commitMessage
     )
 )
