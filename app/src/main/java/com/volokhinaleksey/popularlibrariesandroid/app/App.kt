@@ -10,7 +10,7 @@ import com.volokhinaleksey.popularlibrariesandroid.di.scopes.UserScopeContainer
 import com.volokhinaleksey.popularlibrariesandroid.di.scopes.UsersScopeContainer
 import timber.log.Timber
 
-class App : Application(), UserScopeContainer, UsersScopeContainer {
+open class App : Application(), UserScopeContainer, UsersScopeContainer {
 
     private var _appComponent: AppComponent? = null
     internal val appComponent: AppComponent
