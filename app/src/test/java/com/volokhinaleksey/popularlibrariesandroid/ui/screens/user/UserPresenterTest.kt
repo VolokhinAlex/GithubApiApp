@@ -2,9 +2,11 @@ package com.volokhinaleksey.popularlibrariesandroid.ui.screens.user
 
 import com.github.terrakok.cicerone.Router
 import com.volokhinaleksey.popularlibrariesandroid.di.scopes.UserScopeContainer
+import com.volokhinaleksey.popularlibrariesandroid.model.GithubRepositoryDTO
 import com.volokhinaleksey.popularlibrariesandroid.model.GithubUserDTO
 import com.volokhinaleksey.popularlibrariesandroid.navigation.IScreens
 import com.volokhinaleksey.popularlibrariesandroid.repository.GithubUserRepository
+import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.TestScheduler
 import moxy.MvpPresenter
 import org.junit.Before
@@ -46,22 +48,21 @@ class UserPresenterTest {
         )
     }
 
-//    @Test
-//    fun `checking method calls loadUserDetailsData() return true`() {
-//        Mockito.`when`(userRepository.getUserByLogin(mockGithubUserDTO))
-//            .thenReturn(Single.just(mock(GithubUserDTO::class.java)))
-//        userPresenter.attachView(mock(UserView::class.java))
-//        verify(userRepository, times(1)).getUserByLogin(mockGithubUserDTO)
-//    }
-//
-//    @Test
-//    fun `checking method calls loadUserRepositories() return true`() {
-//        val mockView = mock(UserView::class.java)
-//        Mockito.`when`(userRepository.getUserRepos(mockGithubUserDTO))
-//            .thenReturn(Single.just(emptyList()))
-//        userPresenter.attachView(mockView)
-//        verify(userRepository, times(1)).getUserRepos(mockGithubUserDTO)
-//    }
+    @Test
+    fun `checking method calls loadUserDetailsData() return true`() {
+        Mockito.`when`(userRepository.getUserByLogin(mockGithubUserDTO))
+            .thenReturn(Single.just(mock(GithubUserDTO::class.java)))
+        (userPresenter as UserPresenter).loadUserDetailsData(mockGithubUserDTO)
+        verify(userRepository, times(1)).getUserByLogin(mockGithubUserDTO)
+    }
+
+    @Test
+    fun `checking method calls loadUserRepositories() return true`() {
+        Mockito.`when`(userRepository.getUserRepos(mockGithubUserDTO))
+            .thenReturn(Single.just(listOf(mock(GithubRepositoryDTO::class.java))))
+        (userPresenter as UserPresenter).loadUserRepositories(mockGithubUserDTO)
+        verify(userRepository, times(1)).getUserRepos(mockGithubUserDTO)
+    }
 
     @Test
     fun `checking method calls backPressed() return true`() {
