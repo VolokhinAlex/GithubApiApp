@@ -4,3 +4,29 @@ plugins {
     id 'com.android.library' version '7.4.0' apply false
     id 'org.jetbrains.kotlin.android' version '1.7.21' apply false
 }
+
+subprojects {
+    afterEvaluate { project ->
+        if (project.plugins.findPlugin('android') ?: project.plugins.findPlugin('android-library')) {
+            android {
+                compileSdkVersion Config.compileSdk
+
+                buildFeatures {
+                    viewBinding true
+                }
+                defaultConfig {
+                    applicationId Config.applicationId
+                    versionCode Releases.versionCode
+                    versionName Releases.versionName
+                    minSdk Config.minSdk
+                    targetSdk Config.targetSdk
+                    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+                }
+                compileOptions {
+                    sourceCompatibility Config.INSTANCE.javaVersion
+                    targetCompatibility Config.INSTANCE.javaVersion
+                }
+            }
+        }
+    }
+}
