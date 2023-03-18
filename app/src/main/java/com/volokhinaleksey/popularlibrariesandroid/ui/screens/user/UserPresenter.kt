@@ -73,10 +73,8 @@ class UserPresenter @AssistedInject constructor(
         super.onFirstViewAttach()
         viewState.loadingState()
         viewState.init()
-        githubUser?.let {
-            loadUserDetailsData(user = it)
-            loadUserRepositories(user = it)
-        }
+        githubUser?.let { loadUserDetailsData(it) }
+        githubUser?.let { loadUserRepositories(user = it) }
         userReposListPresenter.onItemClickListener = {
             router.navigateTo(screens.repoDetailsScreen(userReposListPresenter.repos[it.pos]))
         }
@@ -87,7 +85,7 @@ class UserPresenter @AssistedInject constructor(
      * @param user - A user data.
      */
 
-    private fun loadUserDetailsData(user: GithubUserDTO) {
+    fun loadUserDetailsData(user: GithubUserDTO) {
         compositeDisposable.add(
             userRepository.getUserByLogin(user = user).observeOn(uiScheduler).subscribe({ data ->
                 viewState.setUserData(githubUser = data)
@@ -103,7 +101,7 @@ class UserPresenter @AssistedInject constructor(
      * @param user - A user data.
      */
 
-    private fun loadUserRepositories(user: GithubUserDTO) {
+    fun loadUserRepositories(user: GithubUserDTO) {
         compositeDisposable.add(
             userRepository.getUserRepos(user = user).observeOn(uiScheduler).subscribe({ data ->
                 userReposListPresenter.repos.clear()
@@ -127,6 +125,7 @@ class UserPresenter @AssistedInject constructor(
         userScopeContainer.releaseUserScope()
         compositeDisposable.clear()
     }
+
     @AssistedFactory
     interface Factory {
         fun create(@Assisted("githubUser") githubUser: GithubUserDTO?): UserPresenter
