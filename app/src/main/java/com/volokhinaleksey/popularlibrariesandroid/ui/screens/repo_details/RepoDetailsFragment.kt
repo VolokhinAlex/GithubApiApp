@@ -29,6 +29,7 @@ class RepoDetailsFragment : MvpAppCompatFragment(), RepoDetailsView, BackButtonL
     private val binding get() = _binding!!
 
     private val detailsPresenter by moxyPresenter {
+        App.appInstance.initUserSubcomponent()
         App.appInstance.userSubcomponent?.repoDetailsPresenterFactory!!.create(githubRepositoryDTO = detailsRepoData)
     }
 

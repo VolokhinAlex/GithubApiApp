@@ -39,5 +39,4 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Error" />
 
-
 </androidx.constraintlayout.widget.ConstraintLayout>

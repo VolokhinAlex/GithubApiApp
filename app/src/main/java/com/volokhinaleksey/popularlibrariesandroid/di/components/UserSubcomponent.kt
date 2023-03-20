@@ -20,5 +20,4 @@ interface UserSubcomponent {
 
     fun injectUserPresenter(userPresenter: UserPresenter)
     fun injectUserFragment(userFragment: UserFragment)
-
 }

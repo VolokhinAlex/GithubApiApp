@@ -23,12 +23,24 @@ android {
             includeAndroidResources = true
         }
     }
+    flavorDimensions 'debug'
+    productFlavors {
+        fake {
+            versionNameSuffix 'fake'
+            applicationIdSuffix '.fake'
+        }
+        real{
+            applicationIdSuffix '.real'
+            versionNameSuffix 'real'
+        }
+    }
 }
 
 dependencies {
     // Dagger 2
     implementation Dagger.dagger
     implementation Dagger.daggerAndroid
+    implementation 'androidx.test.espresso:espresso-contrib:3.5.1'
     kapt Dagger.daggerCompiler
 
     // Room
@@ -85,4 +97,9 @@ dependencies {
 
     //Robolectric
     testImplementation Tests.robolectric
+
+    androidTestImplementation Tests.truth
+    androidTestImplementation Tests.espressoCore
+    androidTestImplementation Tests.extJunitKtx
+    androidTestImplementation Tests.fragmentTesting
 }
