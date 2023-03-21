@@ -1,9 +1,12 @@
 package com.volokhinaleksey.popularlibrariesandroid.ui.screens.repo_details
 
+import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.testing.FragmentScenario
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.UiController
+import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
@@ -23,6 +26,16 @@ class RepoDetailsFragmentTest {
 
     private lateinit var scenarioRepoDetailsFragment: FragmentScenario<RepoDetailsFragment>
 
+    private fun delay(): ViewAction {
+        return object : ViewAction {
+            override fun getConstraints() = ViewMatchers.isRoot()
+            override fun getDescription(): String = "wait for $2 seconds"
+            override fun perform(uiController: UiController, v: View?) {
+                uiController.loopMainThreadForAtLeast(2000)
+            }
+        }
+    }
+
     @Before
     fun setUp() {
         scenarioRepoDetailsFragment =
@@ -35,7 +48,7 @@ class RepoDetailsFragmentTest {
                         false,
                         "",
                         1,
-                        "https://api.github.com/repos/mojombo/30daysoflaptops.github.io/commits"
+                        "https://api.github.com/repos/mojombo/30daysoflaptops.github.io/commits{/sha}"
                     )
                 )
             )
@@ -43,6 +56,7 @@ class RepoDetailsFragmentTest {
 
     @Test
     fun btnOpenInBrowser_CheckVisible_ReturnTrue() {
+        onView(ViewMatchers.isRoot()).perform(delay())
         onView(withId(R.id.open_in_browser)).check(
             matches(
                 ViewMatchers.withEffectiveVisibility(
@@ -54,6 +68,7 @@ class RepoDetailsFragmentTest {
 
     @Test
     fun btnOpenInBrowser_OnClickAction_ReturnTrue() {
+        onView(ViewMatchers.isRoot()).perform(delay())
         onView(withId(R.id.open_in_browser)).perform(click())
     }
 
@@ -69,6 +84,7 @@ class RepoDetailsFragmentTest {
 
     @Test
     fun commitsList_CheckVisible_ReturnTrue() {
+        onView(ViewMatchers.isRoot()).perform(delay())
         onView(withId(R.id.commits_list_container)).check(
             matches(
                 ViewMatchers.withEffectiveVisibility(
@@ -80,6 +96,7 @@ class RepoDetailsFragmentTest {
 
     @Test
     fun errorMessage_CheckVisibilityGone_ReturnTrue() {
+        onView(ViewMatchers.isRoot()).perform(delay())
         onView(withId(R.id.error_message)).check(
             matches(
                 ViewMatchers.withEffectiveVisibility(
