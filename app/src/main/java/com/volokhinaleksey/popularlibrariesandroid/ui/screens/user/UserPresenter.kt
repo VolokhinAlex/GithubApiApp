@@ -85,7 +85,7 @@ class UserPresenter @AssistedInject constructor(
      * @param user - A user data.
      */
 
-    fun loadUserDetailsData(user: GithubUserDTO) {
+    private fun loadUserDetailsData(user: GithubUserDTO) {
         compositeDisposable.add(
             userRepository.getUserByLogin(user = user).observeOn(uiScheduler).subscribe({ data ->
                 viewState.setUserData(githubUser = data)
@@ -101,7 +101,7 @@ class UserPresenter @AssistedInject constructor(
      * @param user - A user data.
      */
 
-    fun loadUserRepositories(user: GithubUserDTO) {
+    private fun loadUserRepositories(user: GithubUserDTO) {
         compositeDisposable.add(
             userRepository.getUserRepos(user = user).observeOn(uiScheduler).subscribe({ data ->
                 userReposListPresenter.repos.clear()

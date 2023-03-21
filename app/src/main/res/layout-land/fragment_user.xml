@@ -62,6 +62,7 @@
             app:layout_constraintTop_toBottomOf="@+id/person_name">
 
             <TextView
+                android:id="@+id/label_repositories"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/repositories"
@@ -78,6 +79,7 @@
                 tools:text="0" />
 
             <TextView
+                android:id="@+id/label_public_gists"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/gists"
@@ -106,6 +108,7 @@
             app:layout_constraintTop_toBottomOf="@+id/repos_and_gists">
 
             <TextView
+                android:id="@+id/label_followers"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/followers"
@@ -122,6 +125,7 @@
                 tools:text="0" />
 
             <TextView
+                android:id="@+id/label_following"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/following"

@@ -18,6 +18,7 @@ import com.volokhinaleksey.popularlibrariesandroid.utils.parcelable
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 
+
 class RepoDetailsFragment : MvpAppCompatFragment(), RepoDetailsView, BackButtonListener {
 
     private val detailsRepoData: GithubRepositoryDTO? by lazy {
