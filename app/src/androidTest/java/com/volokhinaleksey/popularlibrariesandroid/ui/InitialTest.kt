@@ -1,4 +1,4 @@
-package com.volokhinaleksey.popularlibrariesandroid.ui.activity
+package com.volokhinaleksey.popularlibrariesandroid.ui
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider

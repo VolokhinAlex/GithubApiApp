@@ -1,4 +1,4 @@
-package com.volokhinaleksey.popularlibrariesandroid.ui.activity
+package com.volokhinaleksey.popularlibrariesandroid.ui.screens
 
 import android.content.Context
 import android.content.Intent
@@ -17,7 +17,7 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 @SdkSuppress(minSdkVersion = 27)
-class UserFragmentUIAutomatorTest {
+class ReposDetailsFragmentUIAutomatorTest {
 
     private val uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
@@ -33,26 +33,24 @@ class UserFragmentUIAutomatorTest {
         val intent = context?.packageManager?.getLaunchIntentForPackage(packageName)
         intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
         context?.startActivity(intent)
-        uiDevice.wait(Until.hasObject(By.pkg(packageName).depth(0)), TIMEOUT)
         uiDevice.wait(
             Until.findObject(By.res(packageName, "user_login")),
+            TIMEOUT
+        ).click()
+        uiDevice.wait(
+            Until.findObject(By.res(packageName, "repo_name")),
             TIMEOUT
         ).click()
     }
 
     @Test
-    fun check_NavigationToReposDetails_ReturnTrue() {
-        val navigateItemToReposDetailsScreen = uiDevice.wait(
-            Until.findObject(By.res(packageName, "repo_name")),
-            TIMEOUT
+    fun check_ButtonOpenInBrowser_ReturnTrue() {
+        val openInBrowser = uiDevice.wait(
+            Until.findObject(By.res(packageName, "open_in_browser")), TIMEOUT
         )
-        navigateItemToReposDetailsScreen.click()
-        assertThat(
-            uiDevice.wait(
-                Until.findObject(By.res(packageName, "repo_details_container")),
-                TIMEOUT
-            )
-        ).isNotNull()
+        openInBrowser.click()
+        uiDevice.waitForWindowUpdate(packageName, 1000)
+        assertThat(uiDevice.currentPackageName).isEqualTo("com.android.chrome")
     }
 
     @Test
@@ -60,7 +58,7 @@ class UserFragmentUIAutomatorTest {
         uiDevice.pressBack()
         assertThat(
             uiDevice.wait(
-                Until.findObject(By.res(packageName, "users_list_container")),
+                Until.findObject(By.res(packageName, "user_details_container")),
                 TIMEOUT
             )
         ).isNotNull()
@@ -74,4 +72,5 @@ class UserFragmentUIAutomatorTest {
     companion object {
         private const val TIMEOUT = 5000L
     }
+
 }
