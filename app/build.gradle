@@ -23,6 +23,11 @@ android {
             includeAndroidResources = true
         }
     }
+    sourceSets {
+        androidTest {
+            java.srcDirs += "src/sharedTestData/java"
+        }
+    }
     flavorDimensions 'debug'
     productFlavors {
         fake {

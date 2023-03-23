@@ -1,17 +1,15 @@
 package com.volokhinaleksey.popularlibrariesandroid.ui.screens.user
 
-import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.testing.FragmentScenario
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.UiController
-import androidx.test.espresso.ViewAction
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
 import com.volokhinaleksey.popularlibrariesandroid.R
+import com.volokhinaleksey.popularlibrariesandroid.delay
 import com.volokhinaleksey.popularlibrariesandroid.model.GithubUserDTO
 import com.volokhinaleksey.popularlibrariesandroid.ui.DATA_KEY
 import org.junit.Before
@@ -22,16 +20,6 @@ import org.junit.runner.RunWith
 class UserFragmentTest {
 
     private lateinit var scenario: FragmentScenario<UserFragment>
-
-    private fun delay(): ViewAction {
-        return object : ViewAction {
-            override fun getConstraints() = isRoot()
-            override fun getDescription(): String = "wait for $2 seconds"
-            override fun perform(uiController: UiController, v: View?) {
-                uiController.loopMainThreadForAtLeast(2000)
-            }
-        }
-    }
 
     @Before
     fun setUp() {
