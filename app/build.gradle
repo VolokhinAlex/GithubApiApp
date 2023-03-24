@@ -9,6 +9,10 @@ android {
     namespace 'com.volokhinaleksey.popularlibrariesandroid'
     compileSdk 33
 
+    defaultConfig {
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+    }
+    
     buildTypes {
         release {
             minifyEnabled false
@@ -45,7 +49,6 @@ dependencies {
     // Dagger 2
     implementation Dagger.dagger
     implementation Dagger.daggerAndroid
-    implementation 'androidx.test.espresso:espresso-contrib:3.5.1'
     kapt Dagger.daggerCompiler
 
     // Room
@@ -108,4 +111,6 @@ dependencies {
     androidTestImplementation Tests.extJunitKtx
     androidTestImplementation Tests.fragmentTesting
     androidTestImplementation Tests.uiAutomator
+    androidTestImplementation Tests.extJunit
+    androidTestImplementation Tests.espressoContrib
 }
