@@ -52,13 +52,15 @@ object Versions {
     const val mockitoInline = "5.2.0"
     const val mockitoKotlin = "4.1.0"
     const val junit = "4.13.2"
-    const val fragmentTesting = "1.5.5"
+    const val fragmentTesting = "1.6.0-alpha04"
     const val testCore = "1.5.0"
     const val testRunner = "1.5.2"
     const val extJunit = "1.1.5"
+    const val extJunitKxt = "1.1.5"
     const val extTruth = "1.5.0"
     const val espressoCore = "3.5.1"
     const val espressoIntents = "3.5.1"
+    const val kaspresso = "1.5.1"
 
     // Robolectric tests
     const val robolectric = "4.9"
@@ -136,16 +138,19 @@ object Design {
 object Tests {
     const val truth = "com.google.truth:truth:${Versions.truth}"
     const val mockitoCore = "org.mockito:mockito-core:${Versions.mockitoCore}"
-    const val mockitoInline =  "org.mockito:mockito-inline:${Versions.mockitoInline}"
+    const val mockitoInline = "org.mockito:mockito-inline:${Versions.mockitoInline}"
     const val mockitoKotlin = "org.mockito.kotlin:mockito-kotlin:${Versions.mockitoKotlin}"
     const val junit = "junit:junit:${Versions.junit}"
     const val fragmentTesting = "androidx.fragment:fragment-testing:${Versions.fragmentTesting}"
     const val testCore = "androidx.test:core:${Versions.testCore}"
     const val testRunner = "androidx.test:runner:${Versions.testRunner}"
     const val extJunit = "androidx.test.ext:junit:${Versions.extJunit}"
+    const val extJunitKtx = "androidx.test.ext:junit-ktx:${Versions.extJunitKxt}"
     const val extTruth = "androidx.test.ext:truth:${Versions.extTruth}"
     const val espressoCore = "androidx.test.espresso:espresso-core:${Versions.espressoCore}"
-    const val espressoIntents = "androidx.test.espresso:espresso-intents:${Versions.espressoIntents}"
+    const val espressoIntents =
+        "androidx.test.espresso:espresso-intents:${Versions.espressoIntents}"
     const val robolectric = "org.robolectric:robolectric:${Versions.robolectric}"
+    const val kaspresso = "com.kaspersky.android-components:kaspresso:${Versions.kaspresso}"
 }
 
