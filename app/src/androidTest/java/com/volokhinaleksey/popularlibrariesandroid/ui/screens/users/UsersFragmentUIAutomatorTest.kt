@@ -1,4 +1,4 @@
-package com.volokhinaleksey.popularlibrariesandroid.ui.screens
+package com.volokhinaleksey.popularlibrariesandroid.ui.screens.users
 
 import android.content.Context
 import android.content.Intent
@@ -9,7 +9,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
-import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth
 import com.volokhinaleksey.popularlibrariesandroid.TIMEOUT
 import org.junit.After
 import org.junit.Before
@@ -18,7 +18,7 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 @SdkSuppress(minSdkVersion = 27)
-class UserFragmentUIAutomatorTest {
+class UsersFragmentUIAutomatorTest {
 
     private val uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
@@ -34,34 +34,28 @@ class UserFragmentUIAutomatorTest {
         val intent = context?.packageManager?.getLaunchIntentForPackage(packageName)
         intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
         context?.startActivity(intent)
-        uiDevice.wait(Until.hasObject(By.pkg(packageName).depth(0)), TIMEOUT)
         uiDevice.wait(
-            Until.findObject(By.res(packageName, "user_login")),
-            TIMEOUT
-        ).click()
-    }
-
-    @Test
-    fun check_NavigationToReposDetails_ReturnTrue() {
-        val navigateItemToReposDetailsScreen = uiDevice.wait(
-            Until.findObject(By.res(packageName, "repo_name")),
+            Until.hasObject(By.pkg(packageName).depth(0)),
             TIMEOUT
         )
-        navigateItemToReposDetailsScreen.click()
-        assertThat(
-            uiDevice.wait(
-                Until.findObject(By.res(packageName, "repo_details_container")),
-                TIMEOUT
-            )
-        ).isNotNull()
     }
 
     @Test
-    fun check_ButtonBackClick_ReturnTrue() {
-        uiDevice.pressBack()
-        assertThat(
+    fun check_MainScreenStarted_ReturnTrue() {
+        Truth.assertThat(uiDevice.findObject(By.res(packageName, "users_list_container")))
+            .isNotNull()
+    }
+
+    @Test
+    fun check_NavigationToUserDetails_ReturnTrue() {
+        val navigateItemToUserDetailsScreen = uiDevice.wait(
+            Until.findObject(By.res(packageName, "user_login")),
+            TIMEOUT
+        )
+        navigateItemToUserDetailsScreen.click()
+        Truth.assertThat(
             uiDevice.wait(
-                Until.findObject(By.res(packageName, "users_list_container")),
+                Until.findObject(By.res(packageName, "user_details_container")),
                 TIMEOUT
             )
         ).isNotNull()
@@ -71,4 +65,5 @@ class UserFragmentUIAutomatorTest {
     fun tearDown() {
         context = null
     }
+
 }

@@ -3,27 +3,17 @@ package com.volokhinaleksey.popularlibrariesandroid.ui.screens.repo_details
 import androidx.core.os.bundleOf
 import androidx.fragment.app.testing.FragmentScenario
 import androidx.fragment.app.testing.launchFragmentInContainer
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
-import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
 import com.volokhinaleksey.popularlibrariesandroid.R
-import com.volokhinaleksey.popularlibrariesandroid.delay
 import com.volokhinaleksey.popularlibrariesandroid.model.GithubRepositoryDTO
 import com.volokhinaleksey.popularlibrariesandroid.ui.DATA_KEY
-import com.volokhinaleksey.popularlibrariesandroid.ui.screens.repo_details.adapter.CommitsAdapter
-import com.volokhinaleksey.popularlibrariesandroid.ui.screens.users.adapter.UsersAdapter
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 
-@RunWith(AndroidJUnit4::class)
-class RepoDetailsFragmentTest {
+class RepoDetailsFragmentTest : TestCase() {
 
     private lateinit var scenarioRepoDetailsFragment: FragmentScenario<RepoDetailsFragment>
 
@@ -46,83 +36,85 @@ class RepoDetailsFragmentTest {
     }
 
     @Test
-    fun btnOpenInBrowser_CheckVisible_ReturnTrue() {
-        onView(ViewMatchers.isRoot()).perform(delay())
-        onView(withId(R.id.open_in_browser)).check(
-            matches(
-                ViewMatchers.withEffectiveVisibility(
-                    ViewMatchers.Visibility.VISIBLE
-                )
-            )
-        )
+    fun btnOpenInBrowser_CheckVisible_ReturnTrue() = run {
+        RepoDetailsScreen {
+            openInBrowserBtn {
+                isVisible()
+            }
+        }
     }
 
     @Test
-    fun btnOpenInBrowser_OnClickAction_ReturnTrue() {
-        onView(ViewMatchers.isRoot()).perform(delay())
-        onView(withId(R.id.open_in_browser)).perform(click())
+    fun btnOpenInBrowser_OnClickAction_ReturnTrue() = run {
+        RepoDetailsScreen {
+            openInBrowserBtn {
+                click()
+            }
+        }
     }
 
     @Test
-    fun labelForkCount_HasText_ReturnTrue() {
-        onView(withId(R.id.label_fork_count)).check(matches(withText("Fork count")))
+    fun labelForkCount_HasText_ReturnTrue() = run {
+        RepoDetailsScreen {
+            labelForkCount {
+                hasText("Fork count")
+            }
+        }
     }
 
     @Test
-    fun labelCommits_HasText_ReturnTrue() {
-        onView(withId(R.id.label_commits)).check(matches(withText("Commits:")))
+    fun labelCommits_HasText_ReturnTrue() = run {
+        RepoDetailsScreen {
+            labelCommits {
+                hasText("Commits:")
+            }
+        }
     }
 
     @Test
-    fun commitsList_CheckVisible_ReturnTrue() {
-        onView(ViewMatchers.isRoot()).perform(delay())
-        onView(withId(R.id.commits_list_container)).check(
-            matches(
-                ViewMatchers.withEffectiveVisibility(
-                    ViewMatchers.Visibility.VISIBLE
-                )
-            )
-        )
+    fun commitsList_CheckVisible_ReturnTrue() = run {
+        RepoDetailsScreen {
+            commitsList {
+                isVisible()
+            }
+        }
     }
 
     @Test
-    fun errorMessage_CheckVisibilityGone_ReturnTrue() {
-        onView(ViewMatchers.isRoot()).perform(delay())
-        onView(withId(R.id.error_message)).check(
-            matches(
-                ViewMatchers.withEffectiveVisibility(
-                    ViewMatchers.Visibility.GONE
-                )
-            )
-        )
-    }
-
-    @Test
-    fun check_commitsList_scrollTo_ReturnTrue() {
-        onView(ViewMatchers.isRoot()).perform(delay())
-        onView(withId(R.id.commits_list_container))
-            .perform(
-                RecyclerViewActions.scrollTo<UsersAdapter.ViewHolder>(
+    fun check_commitsList_scrollTo_ReturnTrue() = run {
+        RepoDetailsScreen {
+            commitsList {
+                scrollTo(
                     ViewMatchers.hasDescendant(
                         withText("first commit")
                     )
                 )
-            )
+            }
+        }
     }
 
     @Test
-    fun check_commitsList_ClickOnItem_ReturnTrue() {
-        onView(ViewMatchers.isRoot()).perform(delay())
-        onView(withId(R.id.commits_list_container)).perform(
-            RecyclerViewActions.actionOnItemAtPosition<CommitsAdapter.ViewHolder>(
-                1,
+    fun check_commitsList_ClickOnItem_ReturnTrue() = run {
+        RepoDetailsScreen {
+            commitsList {
+                scrollTo(0)
                 click()
-            )
-        )
+            }
+        }
+    }
+
+    @Test
+    fun errorMessage_CheckVisibilityGone_ReturnTrue() = run {
+        RepoDetailsScreen {
+            errorMessage {
+                isGone()
+            }
+        }
     }
 
     @After
     fun tearDown() {
         scenarioRepoDetailsFragment.close()
     }
+
 }

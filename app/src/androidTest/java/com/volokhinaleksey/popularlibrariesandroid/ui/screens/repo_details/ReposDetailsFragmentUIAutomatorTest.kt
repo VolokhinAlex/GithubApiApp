@@ -1,4 +1,4 @@
-package com.volokhinaleksey.popularlibrariesandroid.ui.screens
+package com.volokhinaleksey.popularlibrariesandroid.ui.screens.repo_details
 
 import android.content.Context
 import android.content.Intent

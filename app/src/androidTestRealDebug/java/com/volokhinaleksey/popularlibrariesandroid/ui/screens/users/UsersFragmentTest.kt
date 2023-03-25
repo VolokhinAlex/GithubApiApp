@@ -2,24 +2,16 @@ package com.volokhinaleksey.popularlibrariesandroid.ui.screens.users
 
 import androidx.fragment.app.testing.FragmentScenario
 import androidx.fragment.app.testing.launchFragmentInContainer
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.contrib.RecyclerViewActions
-import androidx.test.espresso.matcher.ViewMatchers.*
-import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.espresso.matcher.ViewMatchers
 import com.google.common.truth.Truth.assertThat
+import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
 import com.volokhinaleksey.popularlibrariesandroid.R
 import com.volokhinaleksey.popularlibrariesandroid.databinding.FragmentUsersBinding
-import com.volokhinaleksey.popularlibrariesandroid.delay
-import com.volokhinaleksey.popularlibrariesandroid.ui.screens.users.adapter.UsersAdapter
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 
-@RunWith(AndroidJUnit4::class)
-class UsersFragmentTest {
+class UsersFragmentTest : TestCase() {
 
     private lateinit var scenario: FragmentScenario<UsersFragment>
 
@@ -44,44 +36,44 @@ class UsersFragmentTest {
     }
 
     @Test
-    fun usersList_CheckVisible_ReturnTrue() {
-        onView(withId(R.id.users_list_container)).check(
-            matches(
-                withEffectiveVisibility(
-                    Visibility
-                        .VISIBLE
-                )
-            )
-        )
+    fun usersList_CheckVisible_ReturnTrue() = run {
+        UsersScreen {
+            usersList {
+                isVisible()
+            }
+        }
     }
 
     @Test
-    fun errorMessage_CheckVisibilityGone_ReturnTrue() {
-        onView(withId(R.id.error_message)).check(matches(withEffectiveVisibility(Visibility.GONE)))
-    }
-
-    @Test
-    fun check_usersList_scrollTo_ReturnTrue() {
-        onView(isRoot()).perform(delay())
-        onView(withId(R.id.users_list_container))
-            .perform(
-                RecyclerViewActions.scrollTo<UsersAdapter.ViewHolder>(
-                    hasDescendant(
-                        withText("caged")
+    fun check_usersList_scrollTo_ReturnTrue() = run {
+        UsersScreen {
+            usersList {
+                scrollTo(
+                    ViewMatchers.hasDescendant(
+                        ViewMatchers.withText("caged")
                     )
                 )
-            )
+            }
+        }
     }
 
     @Test
-    fun check_usersList_ClickOnItem_ReturnTrue() {
-        onView(isRoot()).perform(delay())
-        onView(withId(R.id.users_list_container)).perform(
-            RecyclerViewActions.actionOnItemAtPosition<UsersAdapter.ViewHolder>(
-                3,
+    fun check_usersList_ClickOnItem_ReturnTrue() = run {
+        UsersScreen {
+            usersList {
+                scrollTo(3)
                 click()
-            )
-        )
+            }
+        }
+    }
+
+    @Test
+    fun errorMessage_CheckVisibilityGone_ReturnTrue() = run {
+        UsersScreen {
+            errorMessage {
+                isGone()
+            }
+        }
     }
 
     @After
