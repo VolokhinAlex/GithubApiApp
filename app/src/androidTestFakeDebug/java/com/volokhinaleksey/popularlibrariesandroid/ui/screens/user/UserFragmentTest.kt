@@ -4,13 +4,16 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.testing.FragmentScenario
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
 import com.volokhinaleksey.popularlibrariesandroid.R
 import com.volokhinaleksey.popularlibrariesandroid.model.GithubUserDTO
 import com.volokhinaleksey.popularlibrariesandroid.ui.DATA_KEY
+import com.volokhinaleksey.popularlibrariesandroid.ui.screens.user.adapter.ReposAdapter
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -26,7 +29,7 @@ class UserFragmentTest {
             themeResId = R.style.Theme_PopularLibrariesAndroid,
             fragmentArgs = bundleOf(
                 DATA_KEY to GithubUserDTO(
-                    "ss",
+                    "user",
                     2,
                     null,
                     null,
@@ -142,6 +145,27 @@ class UserFragmentTest {
     @Test
     fun labelReposList_HasTest_ReturnTrue() {
         onView(withId(R.id.label_repositories_list)).check(matches(withText("Repositories:")))
+    }
+
+    @Test
+    fun check_ReposList_ScrollTo_ReturnTrue() {
+        onView(withId(R.id.repos_list_container)).perform(
+            RecyclerViewActions.scrollTo<ReposAdapter.ViewHolder>(
+                hasDescendant(
+                    withText("Repo: 48")
+                )
+            )
+        )
+    }
+
+    @Test
+    fun check_ReposList_ClickOnItem_ReturnTrue() {
+        onView(withId(R.id.repos_list_container)).perform(
+            RecyclerViewActions.actionOnItemAtPosition<ReposAdapter.ViewHolder>(
+                34,
+                click()
+            )
+        )
     }
 
     fun tearDown() {

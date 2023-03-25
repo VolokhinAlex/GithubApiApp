@@ -43,8 +43,18 @@ class GithubUserRepositoryImpl @Inject constructor() : GithubUserRepository {
      * then all data will be taken from the local database, if they are there
      */
 
-    override fun getUserRepos(user: GithubUserDTO): Single<List<GithubRepositoryDTO>> =
-        Single.just<List<GithubRepositoryDTO>>(listOf()).subscribeOn(Schedulers.io())
+    override fun getUserRepos(user: GithubUserDTO): Single<List<GithubRepositoryDTO>> {
+        val repositories = mutableListOf<GithubRepositoryDTO>()
+        for (it in 0..50) {
+            repositories.add(
+                GithubRepositoryDTO(
+                    id = it.toLong(), name = "Repo: $it", htmlUrl = "", fork = false,
+                    createdAt = null, forks = it.toLong(), commitsUrl = ""
+                )
+            )
+        }
+        return Single.just(repositories.toList()).subscribeOn(Schedulers.io())
+    }
 
     /**
      * Method for getting user information
@@ -59,19 +69,9 @@ class GithubUserRepositoryImpl @Inject constructor() : GithubUserRepository {
     override fun getUserByLogin(user: GithubUserDTO): Single<GithubUserDTO> =
         Single.just(
             GithubUserDTO(
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
+                null, null, null, null, null,
+                null, null, null, null, null,
+                null, null, null
             )
         ).subscribeOn(Schedulers.io())
 }
