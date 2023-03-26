@@ -102,4 +102,5 @@ dependencies {
     androidTestImplementation Tests.espressoCore
     androidTestImplementation Tests.extJunitKtx
     androidTestImplementation Tests.fragmentTesting
+    androidTestImplementation Tests.uiAutomator
 }
