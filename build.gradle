@@ -20,7 +20,6 @@ subprojects {
                     versionName Releases.versionName
                     minSdk Config.minSdk
                     targetSdk Config.targetSdk
-                    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
                 }
                 compileOptions {
                     sourceCompatibility Config.INSTANCE.javaVersion

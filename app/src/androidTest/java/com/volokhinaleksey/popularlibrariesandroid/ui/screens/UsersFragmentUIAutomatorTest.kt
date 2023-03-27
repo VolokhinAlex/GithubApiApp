@@ -10,6 +10,7 @@ import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
 import com.google.common.truth.Truth
+import com.volokhinaleksey.popularlibrariesandroid.TIMEOUT
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -63,10 +64,6 @@ class UsersFragmentUIAutomatorTest {
     @After
     fun tearDown() {
         context = null
-    }
-
-    companion object {
-        private const val TIMEOUT = 5000L
     }
 
 }

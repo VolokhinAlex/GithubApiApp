@@ -62,6 +62,7 @@ object Versions {
     const val espressoIntents = "3.5.1"
     const val kaspresso = "1.5.1"
     const val uiAutomator = "2.2.0"
+    const val espressoContrib = "3.5.1"
 
     // Robolectric tests
     const val robolectric = "4.9"
@@ -154,5 +155,7 @@ object Tests {
     const val robolectric = "org.robolectric:robolectric:${Versions.robolectric}"
     const val kaspresso = "com.kaspersky.android-components:kaspresso:${Versions.kaspresso}"
     const val uiAutomator = "androidx.test.uiautomator:uiautomator:${Versions.uiAutomator}"
+    const val espressoContrib =
+        "androidx.test.espresso:espresso-contrib:${Versions.espressoContrib}"
 }
 

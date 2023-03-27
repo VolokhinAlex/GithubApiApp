@@ -10,6 +10,7 @@ import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
 import com.google.common.truth.Truth.assertThat
+import com.volokhinaleksey.popularlibrariesandroid.TIMEOUT
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -37,6 +38,7 @@ class ReposDetailsFragmentUIAutomatorTest {
             Until.findObject(By.res(packageName, "user_login")),
             TIMEOUT
         ).click()
+
         uiDevice.wait(
             Until.findObject(By.res(packageName, "repo_name")),
             TIMEOUT
@@ -68,9 +70,4 @@ class ReposDetailsFragmentUIAutomatorTest {
     fun tearDown() {
         context = null
     }
-
-    companion object {
-        private const val TIMEOUT = 5000L
-    }
-
 }
