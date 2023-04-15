@@ -6,13 +6,17 @@ import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.volokhinaleksey.popularlibrariesandroid.R
+import com.volokhinaleksey.popularlibrariesandroid.delay
 import com.volokhinaleksey.popularlibrariesandroid.model.GithubRepositoryDTO
 import com.volokhinaleksey.popularlibrariesandroid.ui.DATA_KEY
+import com.volokhinaleksey.popularlibrariesandroid.ui.screens.repo_details.adapter.CommitsAdapter
+import com.volokhinaleksey.popularlibrariesandroid.ui.screens.users.adapter.UsersAdapter
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -46,6 +50,7 @@ class RepoDetailsFragmentTest {
 
     @Test
     fun btnOpenInBrowser_OnClickAction_ReturnTrue() {
+        onView(ViewMatchers.isRoot()).perform(delay())
         onView(withId(R.id.open_in_browser)).perform(click())
     }
 
@@ -77,6 +82,28 @@ class RepoDetailsFragmentTest {
                 ViewMatchers.withEffectiveVisibility(
                     ViewMatchers.Visibility.GONE
                 )
+            )
+        )
+    }
+
+    @Test
+    fun check_commitsList_scrollTo_ReturnTrue() {
+        onView(withId(R.id.commits_list_container))
+            .perform(
+                RecyclerViewActions.scrollTo<UsersAdapter.ViewHolder>(
+                    ViewMatchers.hasDescendant(
+                        withText("Name: 32")
+                    )
+                )
+            )
+    }
+
+    @Test
+    fun check_commitsList_ClickOnItem_ReturnTrue() {
+        onView(withId(R.id.commits_list_container)).perform(
+            RecyclerViewActions.actionOnItemAtPosition<CommitsAdapter.ViewHolder>(
+                40,
+                click()
             )
         )
     }
