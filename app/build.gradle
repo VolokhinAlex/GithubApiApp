@@ -113,4 +113,5 @@ dependencies {
     androidTestImplementation Tests.uiAutomator
     androidTestImplementation Tests.extJunit
     androidTestImplementation Tests.espressoContrib
+    androidTestImplementation Tests.kaspresso
 }
